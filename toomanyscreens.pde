@@ -18,12 +18,12 @@ int framesDistance = 0;
 boolean sendMessage = false;
 
 // Configuration variables:
-int MIN_DISTANCE = 10;
+int MIN_DISTANCE = 0;
 
 // The following variables could be filled in via dialog boxes at a later point:
 int NUMBER_OF_SCREENS = 4;
 boolean SERVER_MODE = true;
-int[] MY_SCREENS = {1,4};
+int[] MY_SCREENS = {3,4};
 String SERVER_IP = "192.168.178.78";
 
 public void init() {
@@ -38,6 +38,7 @@ void setup() {
   screenWidth = gd.getDisplayMode().getWidth();
   screenHeight = gd.getDisplayMode().getHeight();
   size((int)(screenWidth * 2), screenHeight);
+  frameRate(30);
   message = new byte[NUMBER_OF_SCREENS * 3];
   if (SERVER_MODE) {
     server = new Server(this, 5204);
