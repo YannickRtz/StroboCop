@@ -1,8 +1,14 @@
+import javax.swing.JOptionPane;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import processing.net.*;
 
 Client client;
+int screenHeight;
+int screenWidth;
 int errorCounter = 0;
-byte[] dataIn = new byte[15];
+int numberOfScreens;
+byte[] dataIn;
 int[] internScreens = {1, 2, 3};
 String SERVER_IP = "192.168.178.78";
 
@@ -14,7 +20,23 @@ public void init() {
 }
 
 void setup() {
-  size((int)(1920 * 2),1080);
+  GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+  screenWidth = gd.getDisplayMode().getWidth();
+  screenHeight = gd.getDisplayMode().getHeight();
+  // We need to determine if there is a server before this:
+  String inputValue = JOptionPane.showInputDialog("How many screens are involved?\n" +
+                    "(Please do NOT type in \"too many\" Thanks.)");
+  numberOfScreens = Integer.parseInt(inputValue);
+  dataIn = new byte[numberOfScreens * 3];
+  inputValue = JOptionPane.showInputDialog("Please type in a comma separated list of\n" +
+                    "numbers which represent the screens connected\n" +
+                    "to this machine. (e.g. \"1,2\" for the first two screens)");
+  String[] inputValueArr = inputValue.split(",");
+  internScreens = new int[inputValueArr.length];
+  for (int i = inputValueArr.length - 1; i >= 0; i--) {
+    internScreens[i] = Integer.parseInt(inputValueArr[i]);
+  }
+  size((int)(screenWidth * 2), screenHeight);
   client = new Client(this, SERVER_IP, 5204);
 }
 
