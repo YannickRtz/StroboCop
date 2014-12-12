@@ -1,4 +1,5 @@
-# Lightshow
+# toomanyscreens
+An application that transforms an arbitrary number of screens into a colorful lightshow written with processing.
 
-## The "compile_and_run" file
-You can chmod 755 this file to make it an executable batchfile on OS X.
+## Installation
+At this stage toomanyscreens still needs Processing 2 installed. Compile and run with Processing GUI or processing-java command line application.
