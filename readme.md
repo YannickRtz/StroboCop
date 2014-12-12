@@ -7,9 +7,9 @@ Too many DJs with too many screens? Get your party in shape and your screens in 
 
 ## Usage
 
-StroboCop is still early in development. There are still a few uncool things happening:
+StroboCop is early in development. There are still a few uncool things happening:
 
-* At this stage StroboCop still needs Processing 2 installed. Compile and run with Processing GUI or processing-java command line application.
+* StroboCop still needs [Processing](https://processing.org/) to be installed. Compile and run with the Processing GUI or [processing-java](https://github.com/processing/processing/wiki/Command-Line) command line application.
 * On OS X it needs the following system preference turned off (under Mission Control): "Displays have separate spaces."
 * Preferences are still hardcoded and need to be adjusted for the program to run.
 * All displays need to be set to the same resolution as the main display of the machine they are connected to.
