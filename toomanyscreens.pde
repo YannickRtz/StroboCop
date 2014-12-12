@@ -2,14 +2,27 @@ import javax.swing.JOptionPane;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import processing.net.*;
+import ddf.minim.*;
+import ddf.minim.analysis.*;
 
 Client client;
+Server server;
+AudioInput audioIn;
+BeatDetect beat;
 int screenHeight;
 int screenWidth;
-int errorCounter = 0;
-int numberOfScreens;
-byte[] dataIn;
-int[] internScreens = {1, 2, 3};
+int errorCounter;
+byte[] message;
+int framesDistance = 0;
+boolean sendMessage = false;
+
+// Configuration variables:
+int MIN_DISTANCE = 10;
+
+// The following variables could be filled in via dialog boxes at a later point:
+int NUMBER_OF_SCREENS = 4;
+boolean SERVER_MODE = false;
+int[] MY_SCREENS = {1, 2, 3};
 String SERVER_IP = "192.168.178.78";
 
 public void init() {
@@ -23,20 +36,9 @@ void setup() {
   GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
   screenWidth = gd.getDisplayMode().getWidth();
   screenHeight = gd.getDisplayMode().getHeight();
-  // We need to determine if there is a server before this:
-  String inputValue = JOptionPane.showInputDialog("How many screens are involved?\n" +
-                    "(Please do NOT type in \"too many\" Thanks.)");
-  numberOfScreens = Integer.parseInt(inputValue);
-  dataIn = new byte[numberOfScreens * 3];
-  inputValue = JOptionPane.showInputDialog("Please type in a comma separated list of\n" +
-                    "numbers which represent the screens connected\n" +
-                    "to this machine. (e.g. \"1,2\" for the first two screens)");
-  String[] inputValueArr = inputValue.split(",");
-  internScreens = new int[inputValueArr.length];
-  for (int i = inputValueArr.length - 1; i >= 0; i--) {
-    internScreens[i] = Integer.parseInt(inputValueArr[i]);
-  }
   size((int)(screenWidth * 2), screenHeight);
+  message = new byte[NUMBER_OF_SCREENS * 3];
+  // Only if not Server:
   client = new Client(this, SERVER_IP, 5204);
 }
 
@@ -46,8 +48,8 @@ void draw() {
   }
   
   if (client.available() > 0) {
-    dataIn = client.readBytes();
-    if (dataIn.length == 15) {
+    message = client.readBytes();
+    if (message.length == 15) {
       colorScreens();
     } else {
       errorCounter++;
@@ -65,9 +67,9 @@ public void colorScreen(int c1, int c2, int c3, int index) {
 public void colorScreens() {
   noStroke();
   for (int i = 0; i < 3; i++) {
-    colorScreen(byteToInt(dataIn[(internScreens[i] - 1) * 3]),
-                byteToInt(dataIn[(internScreens[i] - 1) * 3 + 1]),
-                byteToInt(dataIn[(internScreens[i] - 1) * 3 + 2]),
+    colorScreen(byteToInt(message[(MY_SCREENS[i] - 1) * 3]),
+                byteToInt(message[(MY_SCREENS[i] - 1) * 3 + 1]),
+                byteToInt(message[(MY_SCREENS[i] - 1) * 3 + 2]),
                 i + 1);
   }
 }
