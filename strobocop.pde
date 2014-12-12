@@ -23,7 +23,7 @@ int MIN_DISTANCE = 0;
 // The following variables could be filled in via dialog boxes at a later point:
 int NUMBER_OF_SCREENS = 4;
 boolean SERVER_MODE = true;
-int[] MY_SCREENS = {3,4};
+int[] MY_SCREENS = {1,2};
 String SERVER_IP = "192.168.178.78";
 
 public void init() {
