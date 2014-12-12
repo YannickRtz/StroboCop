@@ -1,6 +1,6 @@
 # StroboCop
 
-Too many DJs with too many screens? Get you party in shape and your screens in sync! StroboCop will use all your screens to display “light shows” of varying sophistication, but constant greatness.
+Too many DJs with too many screens? Get your party in shape and your screens in sync! StroboCop will use all your screens to display “light shows” of varying sophistication, but constant greatness.
 
 *Prime directive: [party on, dudes](https://www.youtube.com/watch?v=N_yJFLvmjJY).* (Which means girls.)
 
