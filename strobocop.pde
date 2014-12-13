@@ -54,9 +54,9 @@ void draw() {
   if (frameCount == 1) {
     frame.setLocation(0,0);
   }
-  
+
   if (SERVER_MODE) {
-  
+
     if (frameCount == 1) {
       println(server.ip());
     }
@@ -68,7 +68,7 @@ void draw() {
       sendMessage = true;
       framesDistance = MIN_DISTANCE;
       for (int i = 1; i <= NUMBER_OF_SCREENS; i++) {
-        writeColorAt((int)random(255), (int)random(255), (int)random(255), i);
+        writeMessageAt((int)random(255), (int)random(255), (int)random(255), i);
       }
     }
     if (sendMessage) {
@@ -76,9 +76,9 @@ void draw() {
       sendMessage = false;
     }
     colorScreens();
-    
+
   } else { // Client mode
-  
+
     if (client.available() > 0) {
       message = client.readBytes();
       if (message.length > 5) {
@@ -88,7 +88,7 @@ void draw() {
         println("bad message" + errorCounter);
       }
     }
-    
+
   }
 }
 
@@ -117,7 +117,7 @@ public void colorScreens() {
   }
 }
 
-public void writeColorAt(int c1, int c2, int c3, int index) {
+public void writeMessageAt(int c1, int c2, int c3, int index) {
   index = (index - 1) * 3;
   message[index] = intToByte(c1);
   message[index + 1] = intToByte(c2);
