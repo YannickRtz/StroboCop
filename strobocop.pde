@@ -5,6 +5,7 @@ import processing.net.*;
 import ddf.minim.*;
 import ddf.minim.analysis.*;
 
+// Globals:
 Client client;
 Server server;
 Minim minim;
@@ -17,14 +18,19 @@ byte[] message;
 int framesDistance = 0;
 boolean sendMessage = false;
 
-// Configuration variables:
+// Configuration constants:
 int MIN_DISTANCE = 0;
+int FRAMERATE = 30;  //NOTE(yannick): All effects should be framerate independent
 
-// The following variables could be filled in via dialog boxes at a later point:
-int NUMBER_OF_SCREENS = 4;
-boolean SERVER_MODE = true;
+//NOTE(yannick): The following constants could be initialized via dialog boxes
+// at a later point. For now we should put them in a separate properties file
+// and put it on .gitignore
+int NUMBER_OF_SCREENS = 4;  //NOTE(yannick): Only the server needs the right number
+                            // and propagate it somehow to the clients.
+                            //TODO: Can we set this automatically?
+boolean SERVER_MODE = true; //TODO: Can we set this automatically?
 int[] MY_SCREENS = {1,2};
-String SERVER_IP = "192.168.178.78";
+String SERVER_IP = "192.168.178.78"; //TODO: Can we set this automatically?
 
 public void init() {
   frame.removeNotify();
@@ -38,8 +44,11 @@ void setup() {
   screenWidth = gd.getDisplayMode().getWidth();
   screenHeight = gd.getDisplayMode().getHeight();
   size((int)(screenWidth * 2), screenHeight);
-  frameRate(30);
+  
+  frameRate(FRAMERATE);
+  
   message = new byte[NUMBER_OF_SCREENS * 3];
+  
   if (SERVER_MODE) {
     server = new Server(this, 5204);
     minim = new Minim(this);
@@ -52,6 +61,9 @@ void setup() {
 
 void draw() {
   if (frameCount == 1) {
+    //NOTE(yannick): This is supposed to work better when done in draw()
+    // instead of setup()
+    //TODO: Check if this is true for us.
     frame.setLocation(0,0);
   }
   
@@ -68,7 +80,7 @@ void draw() {
       sendMessage = true;
       framesDistance = MIN_DISTANCE;
       for (int i = 1; i <= NUMBER_OF_SCREENS; i++) {
-        writeColorAt((int)random(255), (int)random(255), (int)random(255), i);
+        writeMessageAt((int)random(255), (int)random(255), (int)random(255), i);
       }
     }
     if (sendMessage) {
@@ -117,7 +129,7 @@ public void colorScreens() {
   }
 }
 
-public void writeColorAt(int c1, int c2, int c3, int index) {
+public void writeMessageAt(int c1, int c2, int c3, int index) {
   index = (index - 1) * 3;
   message[index] = intToByte(c1);
   message[index + 1] = intToByte(c2);
