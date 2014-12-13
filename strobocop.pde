@@ -66,9 +66,9 @@ void draw() {
     //TODO: Check if this is true for us.
     frame.setLocation(0,0);
   }
-  
+
   if (SERVER_MODE) {
-  
+
     if (frameCount == 1) {
       println(server.ip());
     }
@@ -88,9 +88,9 @@ void draw() {
       sendMessage = false;
     }
     colorScreens();
-    
+
   } else { // Client mode
-  
+
     if (client.available() > 0) {
       message = client.readBytes();
       if (message.length > 5) {
@@ -100,7 +100,7 @@ void draw() {
         println("bad message" + errorCounter);
       }
     }
-    
+
   }
 }
 
