@@ -15,8 +15,8 @@ int screenHeight;
 int screenWidth;
 int errorCounter;
 byte[] message;
+byte[] oldMessage;
 int framesDistance = 0;
-boolean sendMessage = false;
 
 // Configuration constants:
 int MIN_DISTANCE = 0;
@@ -67,22 +67,33 @@ void draw() {
     }
     beat.detect(audioIn.mix);
     if (beat.isOnset() && framesDistance == 0) {
-      sendMessage = true;
       framesDistance = MIN_DISTANCE;
       for (int i = 1; i <= NUMBER_OF_SCREENS; i++) {
         writeMessageAt((int)random(255), (int)random(255), (int)random(255), i);
       }
     }
-    if (sendMessage) {
-      server.write(message);
-      sendMessage = false;
+    
+    boolean somethingChanged = false;
+    if (oldMessage != null) {
+      for (int i = message.length - 1; i >= 0; i--) {
+        if (message[i] != oldMessage[i]) {
+          somethingChanged = true;
+        }
+      }
+    } else {
+      somethingChanged = true;
     }
-    colorScreens();
+    if (somethingChanged) {
+      server.write(message);
+      oldMessage = message.clone();
+      colorScreens();
+    }
 
   } else { // Client mode
 
     if (client.available() > 0) {
       message = client.readBytes();
+      //TODO: Better check for message integrity:
       if (message.length > 5) {
         colorScreens();
       } else {
@@ -109,7 +120,7 @@ public void colorScreen(int c1, int c2, int c3, int index) {
   fill(c1, c2, c3);
   rect(screenWidth * index, 0, screenWidth, screenHeight);
   ellipseMode(CENTER);
-  fill(c1 + 20, c2 + 20, c3 + 20);
+  fill(Math.min(c1 + 20, 255), Math.min(c2 + 20, 255), Math.min(c3 + 20, 255));
   ellipse((screenWidth/2) + (index * screenWidth), screenHeight/2, radius, radius);
 }
 
