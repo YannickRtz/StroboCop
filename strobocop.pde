@@ -22,16 +22,6 @@ boolean sendMessage = false;
 int MIN_DISTANCE = 0;
 int FRAMERATE = 30;  //NOTE(yannick): All effects should be framerate independent
 
-//NOTE(yannick): The following constants could be initialized via dialog boxes
-// at a later point. For now we should put them in a separate properties file
-// and put it on .gitignore
-int NUMBER_OF_SCREENS = 4;  //NOTE(yannick): Only the server needs the right number
-                            // and propagate it somehow to the clients.
-                            //TODO: Can we set this automatically?
-boolean SERVER_MODE = true; //TODO: Can we set this automatically?
-int[] MY_SCREENS = {1,2};
-String SERVER_IP = "192.168.178.78"; //TODO: Can we set this automatically?
-
 public void init() {
   frame.removeNotify();
   frame.setUndecorated(true);
@@ -44,11 +34,11 @@ void setup() {
   screenWidth = gd.getDisplayMode().getWidth();
   screenHeight = gd.getDisplayMode().getHeight();
   size((int)(screenWidth * 2), screenHeight);
-  
+
   frameRate(FRAMERATE);
-  
+
   message = new byte[NUMBER_OF_SCREENS * 3];
-  
+
   if (SERVER_MODE) {
     server = new Server(this, 5204);
     minim = new Minim(this);
@@ -114,9 +104,13 @@ void stop() {
 }
 
 public void colorScreen(int c1, int c2, int c3, int index) {
+  int radius = screenHeight/4;
   index = index - 1;
   fill(c1, c2, c3);
   rect(screenWidth * index, 0, screenWidth, screenHeight);
+  ellipseMode(CENTER);
+  fill(c1 + 20, c2 + 20, c3 + 20);
+  ellipse((screenWidth/2) + (index * screenWidth), screenHeight/2, radius, radius);
 }
 
 public void colorScreens() {
@@ -134,17 +128,4 @@ public void writeMessageAt(int c1, int c2, int c3, int index) {
   message[index] = intToByte(c1);
   message[index + 1] = intToByte(c2);
   message[index + 2] = intToByte(c3);
-}
-
-public int byteToInt(byte input) {
-  return (int)input + 128;
-}
-
-public byte intToByte(int input) {
-  if (input <= 255) {
-    return (byte)(input - 128);
-  } else {
-    println("too high of an int");
-    return 0; // not supposed to happen
-  }
 }
