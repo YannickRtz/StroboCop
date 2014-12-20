@@ -1,6 +1,5 @@
 //NOTE(yannick): The following constants could be initialized via dialog boxes
-// at a later point. For now we should put them in a separate properties file
-// and put it on .gitignore
+// at a later point.
 
 int NUMBER_OF_SCREENS = 4;  //NOTE(yannick): Only the server needs the right number
 // and propagate it somehow to the clients.
