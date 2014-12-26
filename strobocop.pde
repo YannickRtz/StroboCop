@@ -1,4 +1,3 @@
-import javax.swing.JOptionPane;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import processing.net.*;
@@ -10,7 +9,12 @@ Client client;
 Server server;
 Minim minim;
 AudioInput audioIn;
-BeatDetect beat;
+BeatDetect beatSoundMix;
+BeatDetect beatSoundLeft;
+BeatDetect beatSoundRight;
+BeatDetect beatFreqMix;
+BeatDetect beatFreqLeft;
+BeatDetect beatFreqRight;
 int screenHeight;
 int screenWidth;
 int errorCounter;
