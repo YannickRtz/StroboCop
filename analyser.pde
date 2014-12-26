@@ -75,12 +75,12 @@ public class Analyser {
   }
   
   private void analyseSilence() {
-    silenceDurationSeconds += 1 / FRAMERATE;
+    silenceDurationSeconds += 1 / (float)FRAMERATE;
     
     if (buffer[bufferIndex].mix.isOnset) {
       int index;
       for (int i = 0; i < SILENCE_THRESHOLD; i++) {
-        index = (bufferIndex - i) % BUFFER_SIZE;
+        index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
         if (buffer[index].mix.isOnset) {
           silenceDurationSeconds = 0; // Silence broken
         }
