@@ -15,6 +15,8 @@ public void setupServer() {
   beatFreqMix.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqLeft.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqRight.detectMode(BeatDetect.FREQ_ENERGY);
+  
+  analyser = new Analyser();
 }
 
 public void drawServer() {
@@ -31,6 +33,7 @@ public void drawServer() {
   beatFreqMix.detect(audioIn.mix);
   beatFreqLeft.detect(audioIn.left);
   beatFreqRight.detect(audioIn.right);
+  analyser.analyse();
   
   if (beatFreqMix.isKick() && framesDistance == 0) {
     framesDistance = MIN_DISTANCE;

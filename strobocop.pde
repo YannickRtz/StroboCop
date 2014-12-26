@@ -15,6 +15,7 @@ BeatDetect beatSoundRight;
 BeatDetect beatFreqMix;
 BeatDetect beatFreqLeft;
 BeatDetect beatFreqRight;
+Analyser analyser;
 int screenHeight;
 int screenWidth;
 int errorCounter;
