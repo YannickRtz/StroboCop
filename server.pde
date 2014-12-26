@@ -63,6 +63,7 @@ public void drawServer() {
     rect(0, 0, 300, 100);
     fill(255);
     text("silenceDurationSeconds: " + analyser.silenceDurationSeconds, 20, 20);
+    text("intensity: " + analyser.intensity, 20, 35);
   }
 }
 

@@ -4,6 +4,8 @@ public class Analyser {
   private MainBufferObject[] buffer = new MainBufferObject[BUFFER_SIZE];
   private int bufferIndex = 0;
   private int SILENCE_THRESHOLD = FRAMERATE; // Two hits in during this period break the silence
+  private int INTENSITY_DELAY = FRAMERATE * 3; // What sample size should be used for intensity?
+  private boolean bufferIsFull = false;
   
   // Event types
   public final int ONSET = 0;
@@ -14,7 +16,7 @@ public class Analyser {
   // Public variables
   public int regularity;
   public int mostRegularEvent;
-  public int intensity;
+  public int intensity = 0;
   public int stereoness;
   public int mostLeftEvent;
   public int mostRightEvent;
@@ -42,7 +44,10 @@ public class Analyser {
       
       fillBuffer();
       
-      analyseSilence();
+      if (bufferIsFull) {
+        analyseSilence();
+        analyseIntensity();
+      }
       
       /* What can we do here?
         - Analyse for silence / pauses
@@ -72,6 +77,10 @@ public class Analyser {
     
     bufferIndex = (bufferIndex + 1) % BUFFER_SIZE;
     buffer[bufferIndex] = newBufferItem;
+    
+    if (bufferIndex == BUFFER_SIZE - 1) {
+      bufferIsFull = true;
+    }
   }
   
   private void analyseSilence() {
@@ -79,7 +88,7 @@ public class Analyser {
     
     if (buffer[bufferIndex].mix.isOnset) {
       int index;
-      for (int i = 0; i < SILENCE_THRESHOLD; i++) {
+      for (int i = 1; i < SILENCE_THRESHOLD; i++) {
         index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
         if (buffer[index].mix.isOnset) {
           silenceDurationSeconds = 0; // Silence broken
@@ -88,4 +97,16 @@ public class Analyser {
     }
     
   }
+  
+  private void analyseIntensity() {
+    int index;
+    intensity = 0;
+    for (int i = 1; i < INTENSITY_DELAY; i++) {
+      index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
+      if (buffer[index].mix.isOnset) {
+        intensity += 1;
+      }
+    }
+  }
+  
 }
