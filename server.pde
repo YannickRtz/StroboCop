@@ -57,6 +57,13 @@ public void drawServer() {
     oldMessage = message.clone();
     colorScreens();
   }
+  
+  if (DEBUG_MODE) {
+    fill(0);
+    rect(0, 0, 300, 100);
+    fill(255);
+    text("silenceDurationSeconds: " + analyser.silenceDurationSeconds, 20, 20);
+  }
 }
 
 public void stopServer() {
