@@ -22,6 +22,7 @@ int errorCounter;
 byte[] message;
 byte[] oldMessage;
 int framesDistance = 0;
+TestEffect currentEffect;
 
 // Configuration constants:
 int MIN_DISTANCE = 0;
