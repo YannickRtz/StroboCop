@@ -6,5 +6,6 @@ int NUMBER_OF_SCREENS = 4;  //NOTE(yannick): Only the server needs the right num
 // TODO: Can we set this automatically?
 boolean SERVER_MODE = true; //TODO: Can we set this automatically?
 boolean DEBUG_MODE = true;
+boolean SMALL_MODE = true;
 int[] MY_SCREENS = {1,2};
 String SERVER_IP = "192.168.178.78"; //TODO: Can we set this automatically?

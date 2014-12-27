@@ -38,7 +38,15 @@ void setup() {
   GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
   screenWidth = gd.getDisplayMode().getWidth();
   screenHeight = gd.getDisplayMode().getHeight();
-  size((int)(screenWidth * 2), screenHeight);
+  if (SMALL_MODE) {
+    if (!SERVER_MODE) {
+      println("Small Mode can only be used in server mode.");
+      return;
+    }
+    size(screenWidth, 400);
+  } else {
+    size(screenWidth * MY_SCREENS.length, screenHeight);
+  }
 
   frameRate(FRAMERATE);
 
