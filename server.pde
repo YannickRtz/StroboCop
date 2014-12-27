@@ -4,20 +4,18 @@ public void setupServer() {
   server = new Server(this, 5204);
   minim = new Minim(this);
   audioIn = minim.getLineIn();
-
+  
   beatSoundMix = new BeatDetect();
   beatSoundLeft = new BeatDetect();
   beatSoundRight = new BeatDetect();
-
+  
   beatFreqMix = new BeatDetect();
   beatFreqLeft = new BeatDetect();
   beatFreqRight = new BeatDetect();
   beatFreqMix.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqLeft.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqRight.detectMode(BeatDetect.FREQ_ENERGY);
-
-  currentEffect = new TestEffect();
-
+  
   analyser = new Analyser();
 }
 
@@ -28,7 +26,7 @@ public void drawServer() {
   if (framesDistance > 0) {
     framesDistance--;
   }
-
+  
   beatSoundMix.detect(audioIn.mix);
   beatSoundLeft.detect(audioIn.left);
   beatSoundRight.detect(audioIn.right);
@@ -36,9 +34,14 @@ public void drawServer() {
   beatFreqLeft.detect(audioIn.left);
   beatFreqRight.detect(audioIn.right);
   analyser.analyse();
-
-  currentEffect.run();
-
+  
+  if (beatFreqMix.isKick() && framesDistance == 0) {
+    framesDistance = MIN_DISTANCE;
+    for (int i = 1; i <= NUMBER_OF_SCREENS; i++) {
+      writeMessageAt((int)random(255), (int)random(255), (int)random(255), i);
+    }
+  }
+  
   boolean somethingChanged = false;
   if (oldMessage != null) {
     for (int i = message.length - 1; i >= 0; i--) {
@@ -54,7 +57,7 @@ public void drawServer() {
     oldMessage = message.clone();
     colorScreens();
   }
-
+  
   if (DEBUG_MODE) {
     fill(0);
     rect(0, 0, 300, 100);
