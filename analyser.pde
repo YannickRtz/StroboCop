@@ -17,7 +17,10 @@ public class Analyser {
   public int regularity;
   public int mostRegularEvent;
   public int intensity = 0;
-  public int stereoness;
+  public float stereonessOnset = 0;
+  public float stereonessKick = 0;
+  public float stereonessHat = 0;
+  public float stereonessSnare = 0;
   public int mostLeftEvent;
   public int mostRightEvent;
   public float silenceDurationSeconds = 0;
@@ -47,6 +50,7 @@ public class Analyser {
       if (bufferIsFull) {
         analyseSilence();
         analyseIntensity();
+        analyseStereoness();
       }
       
       /* What can we do here?
@@ -101,7 +105,7 @@ public class Analyser {
   private void analyseIntensity() {
     int index;
     intensity = 0;
-    for (int i = 1; i < INTENSITY_DELAY; i++) {
+    for (int i = 0; i < INTENSITY_DELAY; i++) {
       index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
       if (buffer[index].mix.isOnset) {
         intensity += 1;
@@ -109,4 +113,42 @@ public class Analyser {
     }
   }
   
+  private void analyseStereoness() {
+    int index;
+    stereonessOnset = 0;
+    stereonessKick = 0;
+    stereonessHat = 0;
+    stereonessSnare = 0;
+    for (int i = 0; i < BUFFER_SIZE - 1; i++) {
+      index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
+      if (buffer[index].left.isOnset && !buffer[index].right.isOnset) {
+        stereonessOnset--;
+      }
+      if (!buffer[index].left.isOnset && buffer[index].right.isOnset) {
+        stereonessOnset++;
+      }
+      if (buffer[index].left.isKick && !buffer[index].right.isKick) {
+        stereonessKick--;
+      }
+      if (!buffer[index].left.isKick && buffer[index].right.isKick) {
+        stereonessKick++;
+      }
+      if (buffer[index].left.isHat && !buffer[index].right.isHat) {
+        stereonessHat--;
+      }
+      if (!buffer[index].left.isHat && buffer[index].right.isHat) {
+        stereonessHat++;
+      }
+      if (buffer[index].left.isSnare && !buffer[index].right.isSnare) {
+        stereonessSnare--;
+      }
+      if (!buffer[index].left.isSnare && buffer[index].right.isSnare) {
+        stereonessSnare++;
+      }
+    }
+    stereonessOnset /= BUFFER_SIZE;
+    stereonessKick /= BUFFER_SIZE;
+    stereonessHat /= BUFFER_SIZE;
+    stereonessSnare /= BUFFER_SIZE;
+  }
 }

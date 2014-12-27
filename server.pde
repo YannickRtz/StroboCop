@@ -64,6 +64,10 @@ public void drawServer() {
     fill(255);
     text("silenceDurationSeconds: " + analyser.silenceDurationSeconds, 20, 20);
     text("intensity: " + analyser.intensity, 20, 35);
+    text("stereonessOnset: " + analyser.stereonessOnset, 20, 50);
+    text("stereonessKick: " + analyser.stereonessKick, 20, 65);
+    text("stereonessSnare: " + analyser.stereonessSnare, 20, 80);
+    text("stereonessHat: " + analyser.stereonessHat, 20, 95);
   }
 }
 
