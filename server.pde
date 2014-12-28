@@ -16,7 +16,7 @@ public void setupServer() {
   beatFreqLeft.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqRight.detectMode(BeatDetect.FREQ_ENERGY);
 
-  currentEffect = new TestEffect();
+  currentComposition = new TestComposition();
 
   analyser = new Analyser();
 }
@@ -37,7 +37,7 @@ public void drawServer() {
   beatFreqRight.detect(audioIn.right);
   analyser.analyse();
 
-  currentEffect.run();
+  currentComposition.run();
 
   boolean somethingChanged = false;
   if (oldMessage != null) {
