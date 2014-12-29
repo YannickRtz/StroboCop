@@ -5,12 +5,12 @@ public class Analyser {
   private int bufferIndex = 0;
   private int guessedBeatIndex = 0;
   private int lastPauseIndex = 0;
-  private int SILENCE_THRESHOLD = FRAMERATE; // Two hits in during this period break the silence
+  private int SILENCE_THRESHOLD = FRAMERATE * 3; // Two hits in during this period break the silence
   private boolean bufferIsFull = false;
   private float guessedTempoInFrames = 0;
   private int MIN_EXPECTED_TEMPO = 55;
   private int MAX_EXPECTED_TEMPO = 240;
-  private float MIN_PAUSE_LENGTH = 4;
+  private int LOUDNESS_THRESHOLD = 3;
   
   // Event types
   public final int ONSET = 0;
@@ -21,19 +21,18 @@ public class Analyser {
   // Public variables
   public int regularity;
   public int mostRegularEvent;
-  public int intensity = 0;
   public float stereonessOnset = 0;
   public float stereonessKick = 0;
   public float stereonessHat = 0;
   public float stereonessSnare = 0;
   public int mostLeftEvent;
   public int mostRightEvent;
-  public float silenceDurationSeconds = 0;
   public int detectedRegularity = 0;
   public float guessedTempo = 0;
   public float tempoGuessAge = 0;
   public boolean isGuessedBeat = false;
   public float secondsSincePause = 0;
+  public float loudness = 0;
   
   public Analyser() {
     for (int i = 0; i < BUFFER_SIZE; i++) {
@@ -58,7 +57,6 @@ public class Analyser {
   public void analyse() {
     fillBuffer();
     analyseSilence();
-    analyseIntensity();
     analyseTempo();
     analyseStereoness();
   }
@@ -89,34 +87,28 @@ public class Analyser {
     }
   }
   
-  private void analyseSilence() {
-    silenceDurationSeconds += 1 / (float)FRAMERATE;
+  private void analyseSilence() {    
+    int onsetCounter = 0;
+    int kickCounter = 0;
+    int snareCounter = 0;
+    int hatCounter = 0;
     
-    if (buffer[bufferIndex].mix.isOnset) {
-      int index;
-      for (int i = 1; i < SILENCE_THRESHOLD; i++) {
-        index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
-        if (buffer[index].mix.isOnset) {
-          silenceDurationSeconds = 0; // Silence broken
-        }
-      }
+    int index;
+    for (int i = 0; i < SILENCE_THRESHOLD; i++) {
+      index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
+      if (buffer[index].mix.isOnset) { onsetCounter++; }
+      if (buffer[index].mix.isKick) { kickCounter++; }
+      if (buffer[index].mix.isHat) { hatCounter++; }
+      if (buffer[index].mix.isSnare) { snareCounter++; }
     }
     
-    if (silenceDurationSeconds > MIN_PAUSE_LENGTH) {
+    // Onset is more usefull for pause detection, kick less usefull
+    loudness = (float)(onsetCounter * 2 + hatCounter + snareCounter) / 4;
+    
+    if (loudness <= LOUDNESS_THRESHOLD) {
       lastPauseIndex = frameCount;
     }
     secondsSincePause = (float)(frameCount - lastPauseIndex) / FRAMERATE;
-  }
-  
-  private void analyseIntensity() {
-    int index;
-    intensity = 0;
-    for (int i = 0; i < BUFFER_SIZE - 1; i++) {
-      index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
-      if (buffer[index].mix.isOnset) {
-        intensity += 1;
-      }
-    }
   }
   
   private void analyseStereoness() {

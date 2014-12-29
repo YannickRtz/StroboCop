@@ -61,8 +61,7 @@ public void drawServer() {
     fill(255);
     
     text("secondsSincePause: " + analyser.secondsSincePause, 20, 15);
-    text("silenceDurationSeconds: " + analyser.silenceDurationSeconds, 20, 30);
-    text("intensity: " + analyser.intensity, 20, 45);
+    text("loudness: " + analyser.loudness, 20, 45);
     text("guessedTempo: " + analyser.guessedTempo, 20, 60);
     text("detectedRegularity: " + analyser.detectedRegularity, 20, 75);
     text("tempoGuessAge: " + analyser.tempoGuessAge, 20, 90);
