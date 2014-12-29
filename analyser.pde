@@ -5,6 +5,8 @@ public class Analyser {
   private int bufferIndex = 0;
   private int SILENCE_THRESHOLD = FRAMERATE; // Two hits in during this period break the silence
   private boolean bufferIsFull = false;
+  private int MIN_EXPECTED_TEMPO = 120;
+  private int MAX_EXPECTED_TEMPO = 80;
   
   // Event types
   public final int ONSET = 0;
@@ -23,6 +25,8 @@ public class Analyser {
   public int mostLeftEvent;
   public int mostRightEvent;
   public float silenceDurationSeconds = 0;
+  public int detectedRegularity = 0;
+  public int guessedTempo = 0;
   
   public Analyser() {
     for (int i = 0; i < BUFFER_SIZE; i++) {
@@ -48,6 +52,7 @@ public class Analyser {
       fillBuffer();
       analyseSilence();
       analyseIntensity();
+      analyseTempo();
       analyseStereoness();
   }
   
@@ -140,6 +145,14 @@ public class Analyser {
     stereonessKick /= BUFFER_SIZE;
     stereonessHat /= BUFFER_SIZE;
     stereonessSnare /= BUFFER_SIZE;
+  }
+  
+  public void analyseTempo() {
+    int index = 0;
+    for (int i = 0; i < BUFFER_SIZE - 1; i++) {
+      index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
+      
+    }
   }
   
   // Debug function
