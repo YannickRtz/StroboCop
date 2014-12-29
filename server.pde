@@ -16,7 +16,11 @@ public void setupServer() {
   beatFreqLeft.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqRight.detectMode(BeatDetect.FREQ_ENERGY);
 
-  currentComposition = new TestComposition();
+  Effect effect = new TestEffect();
+
+  Effect[] effects = {effect};
+
+  currentComposition = new TestComposition(effects);
 
   analyser = new Analyser();
 }

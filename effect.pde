@@ -4,8 +4,5 @@ public abstract class Effect {
     // Constructor
   }
 
-  abstract void run() {
-    // Stub
-  }
-
+  abstract void run();
 }
