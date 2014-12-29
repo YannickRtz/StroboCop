@@ -57,7 +57,7 @@ public void drawServer() {
 
   if (DEBUG_MODE) {
     fill(0);
-    rect(0, 0, 300, 100);
+    rect(0, 0, screenWidth, 100);
     fill(255);
     text("silenceDurationSeconds: " + analyser.silenceDurationSeconds, 20, 20);
     text("intensity: " + analyser.intensity, 20, 35);
@@ -65,6 +65,7 @@ public void drawServer() {
     text("stereonessKick: " + analyser.stereonessKick, 20, 65);
     text("stereonessSnare: " + analyser.stereonessSnare, 20, 80);
     text("stereonessHat: " + analyser.stereonessHat, 20, 95);
+    analyser.drawCache();
   }
 }
 

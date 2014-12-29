@@ -4,7 +4,6 @@ public class Analyser {
   private MainBufferObject[] buffer = new MainBufferObject[BUFFER_SIZE];
   private int bufferIndex = 0;
   private int SILENCE_THRESHOLD = FRAMERATE; // Two hits in during this period break the silence
-  private int INTENSITY_DELAY = FRAMERATE * 3; // What sample size should be used for intensity?
   private boolean bufferIsFull = false;
   
   // Event types
@@ -26,14 +25,16 @@ public class Analyser {
   public float silenceDurationSeconds = 0;
   
   public Analyser() {
-    // Constructor
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+      buffer[i] = new MainBufferObject();
+    }
   }
   
   class SubBufferObject {
-    public boolean isOnset;
-    public boolean isKick;
-    public boolean isSnare;
-    public boolean isHat;
+    public boolean isOnset = false;
+    public boolean isKick = false;
+    public boolean isSnare = false;
+    public boolean isHat = false;
   }
   
   class MainBufferObject {
@@ -44,21 +45,10 @@ public class Analyser {
   
   // BeatDetect.detect() has to be executed before this.
   public void analyse() {
-      
       fillBuffer();
-      
-      if (bufferIsFull) {
-        analyseSilence();
-        analyseIntensity();
-        analyseStereoness();
-      }
-      
-      /* What can we do here?
-        - Analyse for silence / pauses
-        - Analyse for regularity of a value
-        - Analyse for intensity / levels
-        - Analyse for stereoness (big differences in left / right channel)
-        */
+      analyseSilence();
+      analyseIntensity();
+      analyseStereoness();
   }
   
   private void fillBuffer() {
@@ -105,7 +95,7 @@ public class Analyser {
   private void analyseIntensity() {
     int index;
     intensity = 0;
-    for (int i = 0; i < INTENSITY_DELAY; i++) {
+    for (int i = 0; i < BUFFER_SIZE - 1; i++) {
       index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
       if (buffer[index].mix.isOnset) {
         intensity += 1;
@@ -150,5 +140,39 @@ public class Analyser {
     stereonessKick /= BUFFER_SIZE;
     stereonessHat /= BUFFER_SIZE;
     stereonessSnare /= BUFFER_SIZE;
+  }
+  
+  // Debug function
+  public void drawCache() {
+    fill(100);
+    if (buffer[bufferIndex].mix.isOnset) { fill(255); }
+    text("isOnset", screenWidth - 100, 20);
+    fill(100);
+    if (buffer[bufferIndex].mix.isKick) { fill(255); }
+    text("isKick", screenWidth - 100, 35);
+    fill(100);
+    if (buffer[bufferIndex].mix.isSnare) { fill(255); }
+    text("isSnare", screenWidth - 100, 50);
+    fill(100);
+    if (buffer[bufferIndex].mix.isHat) { fill(255); }
+    text("isHat", screenWidth - 100, 65);
+    fill(255);
+    
+    int index = 0;
+    for (int i = 0; i < BUFFER_SIZE - 1; i++) {
+      index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
+      if (buffer[index].mix.isOnset) {
+        rect(screenWidth - 105 - i * 5, 10, 3, 10);
+      }
+      if (buffer[index].mix.isKick) {
+        rect(screenWidth - 105 - i * 5, 25, 3, 10);
+      }
+      if (buffer[index].mix.isSnare) {
+        rect(screenWidth - 105 - i * 5, 40, 3, 10);
+      }
+      if (buffer[index].mix.isHat) {
+        rect(screenWidth - 105 - i * 5, 55, 3, 10);
+      }
+    }
   }
 }

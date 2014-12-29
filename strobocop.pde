@@ -29,9 +29,11 @@ int MIN_DISTANCE = 0;
 int FRAMERATE = 30;  //NOTE(yannick): All effects should be framerate independent
 
 public void init() {
-  frame.removeNotify();
-  frame.setUndecorated(true);
-  frame.addNotify();
+  if (!SMALL_MODE) {
+    frame.removeNotify();
+    frame.setUndecorated(true);
+    frame.addNotify();
+  }
   super.init();
 }
 
