@@ -59,12 +59,18 @@ public void drawServer() {
     fill(0);
     rect(0, 0, screenWidth, 100);
     fill(255);
+    
     text("silenceDurationSeconds: " + analyser.silenceDurationSeconds, 20, 20);
     text("intensity: " + analyser.intensity, 20, 35);
-    text("stereonessOnset: " + analyser.stereonessOnset, 20, 50);
-    text("stereonessKick: " + analyser.stereonessKick, 20, 65);
-    text("stereonessSnare: " + analyser.stereonessSnare, 20, 80);
-    text("stereonessHat: " + analyser.stereonessHat, 20, 95);
+    text("guessedTempo: " + analyser.guessedTempo, 20, 50);
+    text("detectedRegularity: " + analyser.detectedRegularity, 20, 65);
+    text("tempoGuessAge: " + analyser.tempoGuessAge, 20, 80);
+    
+    text("stereonessHat: " + analyser.stereonessHat, 300, 35);
+    text("stereonessOnset: " + analyser.stereonessOnset, 300, 50);
+    text("stereonessKick: " + analyser.stereonessKick, 300, 65);
+    text("stereonessSnare: " + analyser.stereonessSnare, 300, 80);
+    
     analyser.drawCache();
   }
 }

@@ -1,12 +1,14 @@
 public class Analyser {
   
-  private int BUFFER_SIZE = FRAMERATE * 4;
+  private int BUFFER_SIZE = FRAMERATE * 5;
   private MainBufferObject[] buffer = new MainBufferObject[BUFFER_SIZE];
   private int bufferIndex = 0;
+  private int guessedBeatIndex = 0;
   private int SILENCE_THRESHOLD = FRAMERATE; // Two hits in during this period break the silence
   private boolean bufferIsFull = false;
-  private int MIN_EXPECTED_TEMPO = 120;
-  private int MAX_EXPECTED_TEMPO = 80;
+  private float guessedTempoInFrames = 0;
+  private int MIN_EXPECTED_TEMPO = 55;
+  private int MAX_EXPECTED_TEMPO = 145;
   
   // Event types
   public final int ONSET = 0;
@@ -26,7 +28,9 @@ public class Analyser {
   public int mostRightEvent;
   public float silenceDurationSeconds = 0;
   public int detectedRegularity = 0;
-  public int guessedTempo = 0;
+  public float guessedTempo = 0;
+  public float tempoGuessAge = 0;
+  public boolean isGuessedBeat = false;
   
   public Analyser() {
     for (int i = 0; i < BUFFER_SIZE; i++) {
@@ -49,11 +53,11 @@ public class Analyser {
   
   // BeatDetect.detect() has to be executed before this.
   public void analyse() {
-      fillBuffer();
-      analyseSilence();
-      analyseIntensity();
-      analyseTempo();
-      analyseStereoness();
+    fillBuffer();
+    analyseSilence();
+    analyseIntensity();
+    analyseTempo();
+    analyseStereoness();
   }
   
   private void fillBuffer() {
@@ -149,10 +153,101 @@ public class Analyser {
   
   public void analyseTempo() {
     int index = 0;
+    int hits;
+    int lastHit = -1;
+    HashMap<Integer, Integer> hitDistances = new HashMap<Integer, Integer>();
+
     for (int i = 0; i < BUFFER_SIZE - 1; i++) {
       index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
+      hits = 0;
+      if (buffer[index].mix.isOnset) { hits++; }
+      if (buffer[index].mix.isKick) { hits++; }
+      if (buffer[index].mix.isHat) { hits++; }
+      if (buffer[index].mix.isSnare) { hits++; }
       
+      if (hits >= 3) {
+        if (lastHit != -1) {
+          if (i - lastHit >= (int)(FRAMERATE / 4)) {
+            hitDistances.put(frameCount - i, i - lastHit);
+            lastHit = i;
+          }
+        } else {
+          lastHit = i;
+        }
+      }
     }
+    
+    HashMap<Integer, Integer> hitMap = new HashMap<Integer, Integer>();
+    
+    int currentNumber;
+    int frequentNumber = -1;
+    for (int distance : hitDistances.values()) {
+      if (hitMap.containsKey(distance)) {
+        currentNumber = distance;
+        hitMap.put(distance, hitMap.get(currentNumber) + 1);
+        if (frequentNumber == -1) {
+          frequentNumber = currentNumber;
+        } else {
+          if (hitMap.get(currentNumber) > hitMap.get(frequentNumber)) {
+            frequentNumber = currentNumber;
+          }
+        }
+      } else {
+        hitMap.put(distance, 1);
+      }
+    }
+    
+    if (frequentNumber > 1) {
+      int average = hitMap.get(frequentNumber) * frequentNumber;
+      detectedRegularity = hitMap.get(frequentNumber);
+      if (hitMap.containsKey(frequentNumber + 1)) {
+        detectedRegularity += hitMap.get(frequentNumber + 1);
+        average += hitMap.get(frequentNumber + 1) * (frequentNumber + 1);
+      }
+      if (hitMap.containsKey(frequentNumber - 1)) {
+        detectedRegularity += hitMap.get(frequentNumber - 1);
+        average += hitMap.get(frequentNumber - 1) * (frequentNumber - 1);
+      }
+      
+      float beatDistanceInFrames = average / detectedRegularity;
+      
+      // If one beat was missed:
+      if (hitMap.containsKey((int)(frequentNumber / 2))) {
+        detectedRegularity += hitMap.get((int)(frequentNumber / 2));
+      }
+      
+      float tmpGuessedTempo = FRAMERATE * 60 / beatDistanceInFrames;
+      
+      if (detectedRegularity >= 3 &&
+          tmpGuessedTempo <= MAX_EXPECTED_TEMPO &&
+          tmpGuessedTempo >= MIN_EXPECTED_TEMPO) {
+          
+        guessedTempo = tmpGuessedTempo;
+        guessedTempoInFrames = beatDistanceInFrames;
+        
+        Set<Integer> keySet = hitDistances.keySet();
+        Iterator<Integer> mapIterator = keySet.iterator();
+        while (mapIterator.hasNext()) {
+          int key = mapIterator.next();
+          if (hitDistances.get(key) == frequentNumber) {
+            guessedBeatIndex = key;
+            break;
+          }
+        }
+        
+      }
+    } else {
+      detectedRegularity = 0;
+    }
+    
+    float tempoOffset = (frameCount - guessedBeatIndex) % guessedTempoInFrames;
+    if (tempoOffset < 0.5 || tempoOffset > guessedTempoInFrames + 0.5) {
+      isGuessedBeat = true;
+    } else {
+      isGuessedBeat = false;
+    }
+    
+    tempoGuessAge = (float)(frameCount - guessedBeatIndex) / FRAMERATE;
   }
   
   // Debug function
@@ -169,6 +264,9 @@ public class Analyser {
     fill(100);
     if (buffer[bufferIndex].mix.isHat) { fill(255); }
     text("isHat", screenWidth - 100, 65);
+    fill(100);
+    if (isGuessedBeat) { fill(255); }
+    text("isGuessedBeat", screenWidth - 100, 85);
     fill(255);
     
     int index = 0;
