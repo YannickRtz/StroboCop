@@ -4,11 +4,13 @@ public class Analyser {
   private MainBufferObject[] buffer = new MainBufferObject[BUFFER_SIZE];
   private int bufferIndex = 0;
   private int guessedBeatIndex = 0;
+  private int lastPauseIndex = 0;
   private int SILENCE_THRESHOLD = FRAMERATE; // Two hits in during this period break the silence
   private boolean bufferIsFull = false;
   private float guessedTempoInFrames = 0;
   private int MIN_EXPECTED_TEMPO = 55;
-  private int MAX_EXPECTED_TEMPO = 145;
+  private int MAX_EXPECTED_TEMPO = 240;
+  private float MIN_PAUSE_LENGTH = 4;
   
   // Event types
   public final int ONSET = 0;
@@ -31,6 +33,7 @@ public class Analyser {
   public float guessedTempo = 0;
   public float tempoGuessAge = 0;
   public boolean isGuessedBeat = false;
+  public float secondsSincePause = 0;
   
   public Analyser() {
     for (int i = 0; i < BUFFER_SIZE; i++) {
@@ -99,6 +102,10 @@ public class Analyser {
       }
     }
     
+    if (silenceDurationSeconds > MIN_PAUSE_LENGTH) {
+      lastPauseIndex = frameCount;
+    }
+    secondsSincePause = (float)(frameCount - lastPauseIndex) / FRAMERATE;
   }
   
   private void analyseIntensity() {
