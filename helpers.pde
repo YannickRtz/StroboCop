@@ -8,7 +8,7 @@ public byte intToByte(int input) {
     } else {
       print("too high of an int ");
       println(input);
-      return 0; // not supposed to happen
+      return (byte)128; // not supposed to happen
     }
 }
 
