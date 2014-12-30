@@ -1,4 +1,4 @@
-public class TestEffect {
+public class TestEffect extends Effect {
 
   private int currentShade = 0;
 
