@@ -16,8 +16,19 @@ public void setupServer() {
   beatFreqLeft.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqRight.detectMode(BeatDetect.FREQ_ENERGY);
 
-  Effect effect = new TestEffect();
-  currentComposition = new TestComposition(effect);
+  // Declare effects here.
+  TestEffect testEffect = new TestEffect();
+  WalkingEffect walkingEffect = new WalkingEffect(new Color(randomInt(255), randomInt(255),randomInt(255)));
+
+  // Declare compositions here.
+  Composition compositionOne = new TestComposition(testEffect);
+  Composition compositionTwo = new TestComposition(walkingEffect);
+
+  // Pool with all compositions.
+  compositions = new Composition[]{compositionOne, compositionTwo};
+
+  // Pick a random initial composition.
+  currentComposition = compositions[1];
 
   analyser = new Analyser();
 }
@@ -36,6 +47,12 @@ public void drawServer() {
   analyser.analyse();
 
   writeMessageAll(Color.BLACK);
+
+  // Pick a new, random composition on pause.
+  if (analyser.secondsSincePause == 0) {
+    currentComposition = compositions[randomInt(compositions.length)];
+  }
+
   currentComposition.run();
 
   boolean somethingChanged = false;
@@ -58,13 +75,13 @@ public void drawServer() {
     fill(0);
     rect(0, 0, screenWidth, 100);
     fill(255);
-    
+
     text("secondsSincePause: " + analyser.secondsSincePause, 20, 15);
     text("loudness: " + analyser.loudness, 20, 45);
     text("guessedTempo: " + analyser.guessedTempo, 20, 60);
     text("detectedRegularity: " + analyser.detectedRegularity, 20, 75);
     text("tempoGuessAge: " + analyser.tempoGuessAge, 20, 90);
-    
+
     fill(100);
     if (analyser.getBeat()) { fill(255); }
     text("analyser.getBeat()", 300, 20);
@@ -73,7 +90,7 @@ public void drawServer() {
     text("stereonessOnset: " + analyser.stereonessOnset, 300, 50);
     text("stereonessKick: " + analyser.stereonessKick, 300, 65);
     text("stereonessSnare: " + analyser.stereonessSnare, 300, 80);
-    
+
     analyser.drawCache();
   }
 }

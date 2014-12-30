@@ -24,6 +24,7 @@ int screenWidth;
 int errorCounter;
 byte[] message;
 byte[] oldMessage;
+Composition[] compositions;
 Composition currentComposition;
 
 // Configuration constants:
