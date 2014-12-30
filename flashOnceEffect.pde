@@ -34,16 +34,18 @@ public class FlashOnceEffect extends Effect {
     int framesPast = frameCount - startFrame + 1;
     if (framesPast < durationFrames) {
       float progress = (float)framesPast / (float)durationFrames;
+      Color randomColor = colors[randomInt(colors.length)];
+      int newAlpha;
       if (flickerMode) {
-        // TODO(yannick)
+        newAlpha = random(1) > progress ? 255 : 0;
       } else {
-        Color randomColor = colors[randomInt(colors.length)];
-        writeMessageAt(randomColor.getRed(),
+        newAlpha = (int)(randomColor.getAlpha() * (1 - progress));
+      }
+      writeMessageAt(randomColor.getRed(),
                        randomColor.getGreen(),
                        randomColor.getBlue(),
-                       randomColor.getAlpha() * (1 - progress),
+                       newAlpha,
                        screenNumber);
-      }
     }
   }
 
