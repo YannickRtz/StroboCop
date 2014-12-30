@@ -5,12 +5,11 @@ public class Analyser {
   private int bufferIndex = 0;
   private int guessedBeatIndex = 0;
   private int lastPauseIndex = 0;
-  private int SILENCE_THRESHOLD = FRAMERATE * 3; // Two hits in during this period break the silence
-  private boolean bufferIsFull = false;
+  private int SILENCE_THRESHOLD = FRAMERATE * 3;
   private float guessedTempoInFrames = 0;
   private int MIN_EXPECTED_TEMPO = 55;
   private int MAX_EXPECTED_TEMPO = 240;
-  private int LOUDNESS_THRESHOLD = 3;
+  private float LOUDNESS_THRESHOLD = 2.3; // If loudness falls below this, it's considered silence
   
   // Event types
   public final int ONSET = 0;
@@ -81,10 +80,6 @@ public class Analyser {
     
     bufferIndex = (bufferIndex + 1) % BUFFER_SIZE;
     buffer[bufferIndex] = newBufferItem;
-    
-    if (bufferIndex == BUFFER_SIZE - 1) {
-      bufferIsFull = true;
-    }
   }
   
   private void analyseSilence() {    
