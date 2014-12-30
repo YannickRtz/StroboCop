@@ -7,7 +7,7 @@ public class ColorPalette {
       colors.add(Color.decode(colorString));
     }
   }
-  
+
   public ColorPalette(Color... colorArray) {
     for (Color c0 : colorArray) {
       colors.add(c0);
@@ -15,11 +15,11 @@ public class ColorPalette {
   }
 
   public void combinePalettes(ColorPalette toAdd) {
-    for (Color colorString : toAdd.colors) {
-      colors.add(colorString);
+    for (Color colorToAdd : toAdd.colors) {
+      colors.add(colorToAdd);
     }
   }
-  
+
   public Color[] toArray() {
     return colors.toArray(new Color[colors.size()]);
   }
