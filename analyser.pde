@@ -6,6 +6,9 @@ public class Analyser {
   private int guessedBeatIndex = 0;
   private int lastPauseIndex = 0;
   private int onsetCooldown = 0;
+  private int kickCooldown = 0;
+  private int snareCooldown = 0;
+  private int hatCooldown = 0;
   private float SILENCE_THRESHOLD = FRAMERATE * 2.5;
   private float guessedTempoInFrames = 0;
   private int MIN_EXPECTED_TEMPO = 55;
@@ -15,10 +18,11 @@ public class Analyser {
   private int COOLDOWN_FRAMES = 5;
   
   // Event types
-  public final int ONSET = 0;
-  public final int KICK = 1;
-  public final int SNARE = 2;
-  public final int HAT = 3;
+  static final int ONSET = 0;
+  static final int KICK = 1;
+  static final int SNARE = 2;
+  static final int HAT = 3;
+  static final int BEAT = 4;
   
   // Public variables
   public int regularity;
@@ -36,6 +40,9 @@ public class Analyser {
   public float secondsSincePause = 0;
   public float loudness = 0;
   public boolean coolOnset = false;
+  public boolean coolKick = false;
+  public boolean coolHat = false;
+  public boolean coolSnare = false;
   
   public Analyser() {
     for (int i = 0; i < BUFFER_SIZE; i++) {
@@ -61,11 +68,32 @@ public class Analyser {
     fillBuffer();
     
     onsetCooldown--;
+    kickCooldown--;
+    snareCooldown--;
+    hatCooldown--;
     if (buffer[bufferIndex].mix.isOnset && onsetCooldown <= 0) {
       onsetCooldown = COOLDOWN_FRAMES;
       coolOnset = true;
     } else {
       coolOnset = false;
+    }
+    if (buffer[bufferIndex].mix.isKick && kickCooldown <= 0) {
+      kickCooldown = COOLDOWN_FRAMES;
+      coolKick = true;
+    } else {
+      coolKick = false;
+    }
+    if (buffer[bufferIndex].mix.isSnare && snareCooldown <= 0) {
+      snareCooldown = COOLDOWN_FRAMES;
+      coolSnare = true;
+    } else {
+      coolSnare = false;
+    }
+    if (buffer[bufferIndex].mix.isHat && hatCooldown <= 0) {
+      hatCooldown = COOLDOWN_FRAMES;
+      coolHat = true;
+    } else {
+      coolHat = false;
     }
       
     analyseSilence();
@@ -262,10 +290,26 @@ public class Analyser {
   }
   
   public boolean getBeat() {
-    if (tempoGuessAge < secondsSincePause && tempoGuessAge < MAX_TEMPO_AGE) {
-      return isGuessedBeat;
-    } else {
-      return coolOnset;
+    return getBeat(BEAT);
+  }
+  
+  public boolean getBeat(int eventType) {
+    boolean result = false;
+    switch (eventType) {
+      case BEAT:
+        if (tempoGuessAge < secondsSincePause && tempoGuessAge < MAX_TEMPO_AGE) {
+          return isGuessedBeat;
+        } else {
+          return coolOnset;
+        }
+      case HAT:
+        return coolHat;
+      case SNARE:
+        return coolSnare;
+      case KICK:
+        return coolKick;
+      default:
+        return false;
     }
   }
   

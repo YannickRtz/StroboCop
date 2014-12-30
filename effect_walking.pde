@@ -6,19 +6,29 @@ public class WalkingEffect extends Effect {
   private int timedTempo;
   private int startFrame = 0;
   private boolean randomMode = false;
+  private int eventType = Analyser.BEAT;
   
   public WalkingEffect(Color... colorArray) {
     colors = colorArray;
   }
   
-  public WalkingEffect(boolean randomMode, int offset, Color... colorArray) {
+  public WalkingEffect(int eventType,
+                       boolean randomMode,
+                       int offset,
+                       Color... colorArray) {
     colors = colorArray;
+    this.eventType = eventType;
     this.randomMode = randomMode;
     walkerPosition += offset;
   }
   
-  public WalkingEffect(boolean randomMode, int offset, int tempo, Color... colorArray) {
+  public WalkingEffect(int eventType,
+                       boolean randomMode,
+                       int offset,
+                       int tempo,
+                       Color... colorArray) {
     colors = colorArray;
+    this.eventType = eventType;
     this.randomMode = randomMode;
     walkerPosition += offset;
     timedMode = true;
@@ -33,7 +43,7 @@ public class WalkingEffect extends Effect {
         advanceWalker();
       }
     } else {
-      if (analyser.getBeat()) {
+      if (analyser.getBeat(eventType)) {
         advanceWalker();
       }
     }

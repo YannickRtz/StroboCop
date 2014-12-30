@@ -4,11 +4,17 @@ public class FlashOnBeatEffect extends Effect {
   private boolean flickerMode = false;
   private int screenNumber = -1; // 0: All Screens, -1: Random Screen
   private FlashOnceEffect[] flashs;
+  private int eventType = Analyser.BEAT;
   
-  public FlashOnBeatEffect(boolean mode, int screenNumber, int duration, Color... colorArray) {
+  public FlashOnBeatEffect(int eventType,
+                           boolean mode,
+                           int screenNumber,
+                           int duration,
+                           Color... colorArray) {
     flickerMode = mode;
     this.screenNumber = screenNumber;
     colors = colorArray;
+    this.eventType = eventType;
     flashs = new FlashOnceEffect[NUMBER_OF_SCREENS];
     for (int i = 0; i < NUMBER_OF_SCREENS; i++) {
       flashs[i] = new FlashOnceEffect(i + 1, duration, flickerMode, colorArray);
@@ -16,7 +22,7 @@ public class FlashOnBeatEffect extends Effect {
   }
   
   public void run() {
-    if (analyser.getBeat()) {
+    if (analyser.getBeat(eventType)) {
       if (screenNumber > 0) {
         flashs[screenNumber - 1].start();
       } else if (screenNumber == 0) {
