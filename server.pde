@@ -15,16 +15,16 @@ public void setupServer() {
   beatFreqMix.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqLeft.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqRight.detectMode(BeatDetect.FREQ_ENERGY);
-  
+
   faderComposition = new Composition(new FadeOnSilenceEffect(Color.BLACK));
-  
+
   // Declare effects here.
-  TestEffect testEffect = new TestEffect();
-  WalkingEffect walkingEffect = new WalkingEffect(new Color(randomInt(255), randomInt(255),randomInt(255)));
+  Effect testEffect = new TestEffect();
+  Effect walkingEffect = new WalkingEffect(new Color(randomInt(255), randomInt(255),randomInt(255)));
 
   // Declare compositions here.
-  Composition compositionOne = new TestComposition(testEffect);
-  Composition compositionTwo = new TestComposition(walkingEffect);
+  Composition compositionOne = new Composition(testEffect);
+  Composition compositionTwo = new Composition(walkingEffect);
 
   // Pool with all compositions.
   compositions = new Composition[]{compositionOne, compositionTwo};

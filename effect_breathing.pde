@@ -7,7 +7,7 @@ public class BreathingEffect extends Effect {
   private int currentScreen = 0;
   private Color currentColor;
   private int durationInFrames = 0;
-  
+
   public BreathingEffect(int screenNumber, int duration, int offset, Color... colorArray) {
     this.screenNumber = screenNumber;
     colors = colorArray;
@@ -19,7 +19,7 @@ public class BreathingEffect extends Effect {
       currentScreen = randomInt(NUMBER_OF_SCREENS) + 1;
     }
   }
-  
+
   public void run() {
     if (animationFrame == 0) {
       currentColor = colors[randomInt(colors.length)];
@@ -27,9 +27,9 @@ public class BreathingEffect extends Effect {
         currentScreen = randomInt(NUMBER_OF_SCREENS) + 1;
       }
     }
-    
+
     animationFrame = (animationFrame + 1) % durationInFrames;
-    
+
     int newAlpha;
     if (animationFrame < durationInFrames / 2) {
       newAlpha = (int)(250 * (animationFrame / (durationInFrames / 2)));
@@ -37,7 +37,7 @@ public class BreathingEffect extends Effect {
       newAlpha = (int)(250 * ((durationInFrames - animationFrame) / (durationInFrames / 2)));
     }
     newAlpha = (int)(currentColor.getAlpha() * ((float)newAlpha / 255));
-    
+
     if (screenNumber > 0) {
       writeMessageAt(currentColor.getRed(),
                      currentColor.getGreen(),
