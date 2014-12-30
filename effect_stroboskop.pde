@@ -8,21 +8,21 @@ public class StroboskopEffect extends Effect {
   private boolean animationState = false;
   private float propability = 0;
   private int eventType = Analyser.BEAT;
-  
+
   public StroboskopEffect(int eventType,
                           int screenNumber,
                           float propability,
-                          Color... colorArray) {
+                          ColorPalette palette) {
     this.screenNumber = screenNumber;
     this.propability = propability;
     this.eventType = eventType;
-    colors = colorArray;
+    colors = palette.toArray();
     currentColor = colors[randomInt(colors.length)];
     if (screenNumber == -1) {
       currentScreen = randomInt(NUMBER_OF_SCREENS) + 1;
     }
   }
-  
+
   public void run() {
     if (analyser.getBeat(eventType)) {
       if (random(1) < 0.5 && animating) {

@@ -6,30 +6,30 @@ public class FlashOnceEffect extends Effect {
   private int screenNumber = 1;
   private int duration = 0;
   int durationFrames = 0;
-  
-  public FlashOnceEffect(int screenNumber, int duration, Color... colorArray) {
-    colors = colorArray;
+
+  public FlashOnceEffect(int screenNumber, int duration, ColorPalette palette) {
+    colors = palette.toArray();
     this.screenNumber = screenNumber;
     this.duration = duration;
     durationFrames = duration / (1000 / FRAMERATE);
   }
-  
-  public FlashOnceEffect(int screenNumber, int duration, boolean mode, Color... colorArray) {
-    colors = colorArray;
+
+  public FlashOnceEffect(int screenNumber, int duration, boolean mode, ColorPalette palette) {
+    colors = palette.toArray();
     durationFrames = duration / (1000 / FRAMERATE);
     this.screenNumber = screenNumber;
     this.duration = duration;
     flickerMode = mode;
   }
-  
+
   public void start() {
     startFrame = frameCount;
   }
-  
-  public void setColors(Color... colorArray) {
-    colors = colorArray;
+
+  public void setColors(ColorPalette palette) {
+    colors = palette.toArray();
   }
-  
+
   public void run() {
     int framesPast = frameCount - startFrame + 1;
     if (framesPast < durationFrames) {

@@ -7,27 +7,27 @@ public class WalkingEffect extends Effect {
   private int startFrame = 0;
   private boolean randomMode = false;
   private int eventType = Analyser.BEAT;
-  
-  public WalkingEffect(Color... colorArray) {
-    colors = colorArray;
+
+  public WalkingEffect(ColorPalette palette) {
+    colors = palette.toArray();
   }
-  
+
   public WalkingEffect(int eventType,
                        boolean randomMode,
                        int offset,
-                       Color... colorArray) {
-    colors = colorArray;
+                       ColorPalette palette) {
+    colors = palette.toArray();
     this.eventType = eventType;
     this.randomMode = randomMode;
     walkerPosition += offset;
   }
-  
+
   public WalkingEffect(int eventType,
                        boolean randomMode,
                        int offset,
                        int tempo,
-                       Color... colorArray) {
-    colors = colorArray;
+                       ColorPalette palette) {
+    colors = palette.toArray();
     this.eventType = eventType;
     this.randomMode = randomMode;
     walkerPosition += offset;
@@ -47,11 +47,11 @@ public class WalkingEffect extends Effect {
         advanceWalker();
       }
     }
-    
+
     Color randomColor = colors[randomInt(colors.length)];
     writeMessageAt(randomColor, walkerPosition + 1); // Not zero based...
   }
-  
+
   public void advanceWalker() {
     if (randomMode) {
       walkerPosition = randomInt(NUMBER_OF_SCREENS);

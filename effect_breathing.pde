@@ -8,9 +8,9 @@ public class BreathingEffect extends Effect {
   private Color currentColor;
   private int durationInFrames = 0;
 
-  public BreathingEffect(int screenNumber, int duration, int offset, Color... colorArray) {
+  public BreathingEffect(int screenNumber, int duration, int offset, ColorPalette palette) {
     this.screenNumber = screenNumber;
-    colors = colorArray;
+    colors = palette.toArray();
     this.duration = duration;
     durationInFrames = duration / (1000 / FRAMERATE);
     animationFrame = (int)offset / (1000 / FRAMERATE);
