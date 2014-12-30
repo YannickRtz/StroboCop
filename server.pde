@@ -18,21 +18,9 @@ public void setupServer() {
 
   faderComposition = new Composition(new FadeOnSilenceEffect(Color.BLACK));
 
-  // Declare effects here.
-  Effect testEffect = new TestEffect();
-  Effect walkingEffect = new WalkingEffect(new Color(randomInt(255), randomInt(255),randomInt(255)));
-
-  // Declare compositions here.
-  Composition compositionOne = new Composition(testEffect);
-  Composition compositionTwo = new Composition(walkingEffect);
-
-  // Pool with all compositions.
-  compositions = new Composition[]{compositionOne, compositionTwo};
-
-  // Pick a random initial composition.
-  currentComposition = compositions[1];
-
   analyser = new Analyser();
+  
+  compose();
 }
 
 public void drawServer() {
