@@ -220,9 +220,13 @@ public class Analyser {
       if (detectedRegularity >= 3 &&
           tmpGuessedTempo <= MAX_EXPECTED_TEMPO &&
           tmpGuessedTempo >= MIN_EXPECTED_TEMPO) {
-          
-        guessedTempo = tmpGuessedTempo;
-        guessedTempoInFrames = beatDistanceInFrames;
+        if (tmpGuessedTempo < 80) {
+          guessedTempo = tmpGuessedTempo * 2;
+          guessedTempoInFrames = beatDistanceInFrames / 2;
+        } else {
+          guessedTempo = tmpGuessedTempo;
+          guessedTempoInFrames = beatDistanceInFrames;
+        }
         
         Set<Integer> keySet = hitDistances.keySet();
         Iterator<Integer> mapIterator = keySet.iterator();
