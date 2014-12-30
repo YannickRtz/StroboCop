@@ -6,11 +6,11 @@ public class Analyser {
   private int guessedBeatIndex = 0;
   private int lastPauseIndex = 0;
   private int onsetCooldown = 0;
-  private int SILENCE_THRESHOLD = FRAMERATE * 3;
+  private float SILENCE_THRESHOLD = FRAMERATE * 2.5;
   private float guessedTempoInFrames = 0;
   private int MIN_EXPECTED_TEMPO = 55;
   private int MAX_EXPECTED_TEMPO = 240;
-  private float LOUDNESS_THRESHOLD = 2.3; // If loudness falls below this, it's considered silence
+  private float LOUDNESS_THRESHOLD = 2; // If loudness falls below this, it's considered silence
   private int MAX_TEMPO_AGE = 40;
   private int onsetCooldown_FRAMES = 5;
   

@@ -79,9 +79,13 @@ public void stopServer() {
   server.stop();
 }
 
-public void writeMessageAt(int c1, int c2, int c3, int index) {
+public void writeMessageAt(float c1, float c2, float c3, int index) {
   index = (index - 1) * 3;
-  message[index] = intToByte(c1);
-  message[index + 1] = intToByte(c2);
-  message[index + 2] = intToByte(c3);
+  message[index] = intToByte((int)c1);
+  message[index + 1] = intToByte((int)c2);
+  message[index + 2] = intToByte((int)c3);
+}
+
+public void writeMessageAt(color c0, int index) {
+  writeMessageAt(red(c0), green(c0), blue(c0), index);
 }
