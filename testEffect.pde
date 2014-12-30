@@ -1,16 +1,20 @@
 public class TestEffect extends Effect {
 
   private int currentShade = 0;
+  private int framesDistance = 0;
+  private int MIN_DISTANCE = 4;
 
   public TestEffect() {
     // Constructor
   }
 
   public void run() {
+  
+    if (framesDistance > 0) { framesDistance--; }
 
     writeMessageAt(currentShade, currentShade, currentShade, NUMBER_OF_SCREENS);
 
-    if (beatFreqMix.isKick() && framesDistance == 0) {
+    if (analyser.getBeat()) {
       framesDistance = MIN_DISTANCE;
       for (int i = 1; i <= (NUMBER_OF_SCREENS - 1); i++) {
         writeMessageAt((int)random(255), (int)random(255), (int)random(255), i);

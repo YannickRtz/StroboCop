@@ -5,12 +5,14 @@ public class Analyser {
   private int bufferIndex = 0;
   private int guessedBeatIndex = 0;
   private int lastPauseIndex = 0;
+  private int onsetCooldown = 0;
   private int SILENCE_THRESHOLD = FRAMERATE * 3;
   private float guessedTempoInFrames = 0;
   private int MIN_EXPECTED_TEMPO = 55;
   private int MAX_EXPECTED_TEMPO = 240;
   private float LOUDNESS_THRESHOLD = 2.3; // If loudness falls below this, it's considered silence
   private int MAX_TEMPO_AGE = 40;
+  private int onsetCooldown_FRAMES = 5;
   
   // Event types
   public final int ONSET = 0;
@@ -250,10 +252,16 @@ public class Analyser {
   }
   
   public boolean getBeat() {
+    onsetCooldown--;
     if (tempoGuessAge < secondsSincePause && tempoGuessAge < MAX_TEMPO_AGE) {
       return isGuessedBeat;
     } else {
-      return buffer[bufferIndex].mix.isOnset;
+      if (buffer[bufferIndex].mix.isOnset && onsetCooldown <= 0) {
+        onsetCooldown = onsetCooldown_FRAMES;
+        return true;
+      } else {
+        return false;
+      }
     }
   }
   

@@ -22,11 +22,9 @@ int screenWidth;
 int errorCounter;
 byte[] message;
 byte[] oldMessage;
-int framesDistance = 0;
 Composition currentComposition;
 
 // Configuration constants:
-int MIN_DISTANCE = 0;
 int FRAMERATE = 30;  //NOTE(yannick): All effects should be framerate independent
 
 public void init() {

@@ -26,9 +26,6 @@ public void drawServer() {
   if (frameCount == 1) {
     println(server.ip());
   }
-  if (framesDistance > 0) {
-    framesDistance--;
-  }
 
   beatSoundMix.detect(audioIn.mix);
   beatSoundLeft.detect(audioIn.left);
