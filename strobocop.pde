@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.Iterator;
+import java.util.Set;
+import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import processing.net.*;

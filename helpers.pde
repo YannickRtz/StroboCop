@@ -10,3 +10,7 @@ public byte intToByte(int input) {
       return 0; // not supposed to happen
     }
 }
+
+public int randomInt(int max) {
+  return (int)random(max);
+}

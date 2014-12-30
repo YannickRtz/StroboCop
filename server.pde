@@ -64,6 +64,10 @@ public void drawServer() {
     text("detectedRegularity: " + analyser.detectedRegularity, 20, 75);
     text("tempoGuessAge: " + analyser.tempoGuessAge, 20, 90);
     
+    fill(100);
+    if (analyser.getBeat()) { fill(255); }
+    text("analyser.getBeat()", 300, 20);
+    fill(255);
     text("stereonessHat: " + analyser.stereonessHat, 300, 35);
     text("stereonessOnset: " + analyser.stereonessOnset, 300, 50);
     text("stereonessKick: " + analyser.stereonessKick, 300, 65);
@@ -86,6 +90,6 @@ public void writeMessageAt(float c1, float c2, float c3, int index) {
   message[index + 2] = intToByte((int)c3);
 }
 
-public void writeMessageAt(color c0, int index) {
-  writeMessageAt(red(c0), green(c0), blue(c0), index);
+public void writeMessageAt(Color c0, int index) {
+  writeMessageAt(c0.getRed(), c0.getGreen(), c0.getBlue(), index);
 }
