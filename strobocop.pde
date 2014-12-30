@@ -26,6 +26,7 @@ byte[] message;
 byte[] oldMessage;
 Composition[] compositions;
 Composition currentComposition;
+Composition faderComposition;
 
 // Configuration constants:
 int FRAMERATE = 30;  //NOTE(yannick): All effects should be framerate independent

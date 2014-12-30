@@ -15,7 +15,9 @@ public void setupServer() {
   beatFreqMix.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqLeft.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqRight.detectMode(BeatDetect.FREQ_ENERGY);
-
+  
+  faderComposition = new Composition(new FadeOnSilenceEffect(Color.BLACK));
+  
   // Declare effects here.
   TestEffect testEffect = new TestEffect();
   WalkingEffect walkingEffect = new WalkingEffect(new Color(randomInt(255), randomInt(255),randomInt(255)));
@@ -54,6 +56,7 @@ public void drawServer() {
   }
 
   currentComposition.run();
+  faderComposition.run();
 
   boolean somethingChanged = false;
   if (oldMessage != null) {
