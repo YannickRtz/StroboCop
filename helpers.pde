@@ -6,7 +6,8 @@ public byte intToByte(int input) {
   if (input <= 255) {
     return (byte)(input - 128);
     } else {
-      println("too high of an int");
+      print("too high of an int ");
+      println(input);
       return 0; // not supposed to happen
     }
 }

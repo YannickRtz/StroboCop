@@ -86,7 +86,7 @@ public void stopServer() {
 
 public int mixColor(float c1, float c2, float alpha) {
   if (alpha == 255) { return (int)c2; }
-  return (int)(c1 * (255 / (255 - alpha)) + c2 * (255 / alpha));
+  return (int)(c1 * ((255 - alpha) / 255) + c2 * (alpha / 255));
 }
 
 public void writeMessageAt(float c1, float c2, float c3, int index) {
@@ -98,9 +98,9 @@ public void writeMessageAt(float c1, float c2, float c3, int index) {
 
 public void writeMessageAt(float c1, float c2, float c3, float alpha, int index) {
   index = (index - 1) * 3;
-  message[index] = intToByte(mixColor(message[index], c1, alpha));
-  message[index + 1] = intToByte(mixColor(message[index + 1], c2, alpha));
-  message[index + 2] = intToByte(mixColor(message[index + 2], c3, alpha));
+  message[index] = intToByte(mixColor(byteToInt(message[index]), c1, alpha));
+  message[index + 1] = intToByte(mixColor(byteToInt(message[index + 1]), c2, alpha));
+  message[index + 2] = intToByte(mixColor(byteToInt(message[index + 2]), c3, alpha));
 }
 
 public void writeMessageAt(Color c0, int index) {
