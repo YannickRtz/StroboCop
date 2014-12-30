@@ -35,6 +35,7 @@ public void drawServer() {
   beatFreqRight.detect(audioIn.right);
   analyser.analyse();
 
+  writeMessageAll(Color.BLACK);
   currentComposition.run();
 
   boolean somethingChanged = false;
@@ -92,4 +93,16 @@ public void writeMessageAt(float c1, float c2, float c3, int index) {
 
 public void writeMessageAt(Color c0, int index) {
   writeMessageAt(c0.getRed(), c0.getGreen(), c0.getBlue(), index);
+}
+
+public void writeMessageAll(Color c0) {
+  for (int i = 1; i <= NUMBER_OF_SCREENS; i++) {
+    writeMessageAt(c0, i);
+  }
+}
+
+public void writeMessageAll(float c1, float c2, float c3) {
+  for (int i = 1; i <= NUMBER_OF_SCREENS; i++) {
+    writeMessageAt(c1, c2, c3, i);
+  }
 }

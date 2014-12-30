@@ -12,7 +12,7 @@ public class Analyser {
   private int MAX_EXPECTED_TEMPO = 240;
   private float LOUDNESS_THRESHOLD = 2; // If loudness falls below this, it's considered silence
   private int MAX_TEMPO_AGE = 40;
-  private int onsetCooldown_FRAMES = 5;
+  private int COOLDOWN_FRAMES = 5;
   
   // Event types
   public final int ONSET = 0;
@@ -35,6 +35,7 @@ public class Analyser {
   public boolean isGuessedBeat = false;
   public float secondsSincePause = 0;
   public float loudness = 0;
+  public boolean coolOnset = false;
   
   public Analyser() {
     for (int i = 0; i < BUFFER_SIZE; i++) {
@@ -58,6 +59,15 @@ public class Analyser {
   // BeatDetect.detect() has to be executed before this.
   public void analyse() {
     fillBuffer();
+    
+    onsetCooldown--;
+    if (buffer[bufferIndex].mix.isOnset && onsetCooldown <= 0) {
+      onsetCooldown = COOLDOWN_FRAMES;
+      coolOnset = true;
+    } else {
+      coolOnset = false;
+    }
+      
     analyseSilence();
     analyseTempo();
     analyseStereoness();
@@ -252,16 +262,10 @@ public class Analyser {
   }
   
   public boolean getBeat() {
-    onsetCooldown--;
     if (tempoGuessAge < secondsSincePause && tempoGuessAge < MAX_TEMPO_AGE) {
       return isGuessedBeat;
     } else {
-      if (buffer[bufferIndex].mix.isOnset && onsetCooldown <= 0) {
-        onsetCooldown = onsetCooldown_FRAMES;
-        return true;
-      } else {
-        return false;
-      }
+      return coolOnset;
     }
   }
   
