@@ -84,6 +84,11 @@ public void stopServer() {
   server.stop();
 }
 
+public int mixColor(float c1, float c2, float alpha) {
+  if (alpha == 255) { return (int)c2; }
+  return (int)(c1 * (255 / (255 - alpha)) + c2 * (255 / alpha));
+}
+
 public void writeMessageAt(float c1, float c2, float c3, int index) {
   index = (index - 1) * 3;
   message[index] = intToByte((int)c1);
@@ -91,8 +96,15 @@ public void writeMessageAt(float c1, float c2, float c3, int index) {
   message[index + 2] = intToByte((int)c3);
 }
 
+public void writeMessageAt(float c1, float c2, float c3, float alpha, int index) {
+  index = (index - 1) * 3;
+  message[index] = intToByte(mixColor(message[index], c1, alpha));
+  message[index + 1] = intToByte(mixColor(message[index + 1], c2, alpha));
+  message[index + 2] = intToByte(mixColor(message[index + 2], c3, alpha));
+}
+
 public void writeMessageAt(Color c0, int index) {
-  writeMessageAt(c0.getRed(), c0.getGreen(), c0.getBlue(), index);
+  writeMessageAt(c0.getRed(), c0.getGreen(), c0.getBlue(), c0.getAlpha(), index);
 }
 
 public void writeMessageAll(Color c0) {
@@ -104,5 +116,11 @@ public void writeMessageAll(Color c0) {
 public void writeMessageAll(float c1, float c2, float c3) {
   for (int i = 1; i <= NUMBER_OF_SCREENS; i++) {
     writeMessageAt(c1, c2, c3, i);
+  }
+}
+
+public void writeMessageAll(float c1, float c2, float c3, float alpha) {
+  for (int i = 1; i <= NUMBER_OF_SCREENS; i++) {
+    writeMessageAt(c1, c2, c3, alpha, i);
   }
 }
