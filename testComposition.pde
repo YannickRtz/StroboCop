@@ -1,6 +1,6 @@
 public class TestComposition extends Composition {
 
-  public TestComposition(Effect[] effects) {
+  public TestComposition(Effect... effects) {
     super(effects);
   }
 

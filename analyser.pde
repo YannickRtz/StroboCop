@@ -10,6 +10,7 @@ public class Analyser {
   private int MIN_EXPECTED_TEMPO = 55;
   private int MAX_EXPECTED_TEMPO = 240;
   private float LOUDNESS_THRESHOLD = 2.3; // If loudness falls below this, it's considered silence
+  private int MAX_TEMPO_AGE = 40;
   
   // Event types
   public final int ONSET = 0;
@@ -246,6 +247,14 @@ public class Analyser {
     }
     
     tempoGuessAge = (float)(frameCount - guessedBeatIndex) / FRAMERATE;
+  }
+  
+  public boolean getBeat() {
+    if (tempoGuessAge < secondsSincePause && tempoGuessAge < MAX_TEMPO_AGE) {
+      return isGuessedBeat;
+    } else {
+      return buffer[bufferIndex].mix.isOnset;
+    }
   }
   
   // Debug function

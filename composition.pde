@@ -2,7 +2,7 @@ public class Composition {
 
   private Effect[] effectsList;
 
-  public Composition(Effect[] effects) {
+  public Composition(Effect... effects) {
     this.effectsList = effects;
   }
 
