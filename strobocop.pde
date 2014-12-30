@@ -24,7 +24,7 @@ int screenWidth;
 int errorCounter;
 byte[] message;
 byte[] oldMessage;
-Composition[] compositions;
+ArrayList<Composition> compositions;
 Composition currentComposition;
 Composition faderComposition;
 

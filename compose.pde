@@ -17,14 +17,13 @@ public void compose() {
   Effect test = new TestEffect();
   Effect walking = new WalkingEffect(Color.BLUE);
   Effect background = new BackgroundColorEffect(Color.YELLOW);
-
+  
+  compositions = new ArrayList<Composition>();
+  
   // Declare compositions here.
-  Composition compositionOne = new Composition(test);
-  Composition compositionTwo = new Composition(background, walking);
-
-  // Pool with all compositions.
-  compositions = new Composition[]{compositionOne, compositionTwo};
-
+  compositions.add(new Composition(test));
+  compositions.add(new Composition(background, walking));
+  
   // Pick a random initial composition.
-  currentComposition = compositions[0];
+  currentComposition = compositions.get(0);
 }

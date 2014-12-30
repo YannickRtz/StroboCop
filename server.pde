@@ -40,7 +40,7 @@ public void drawServer() {
 
   // Pick a new, random composition on pause.
   if (analyser.secondsSincePause == 0) {
-    currentComposition = compositions[randomInt(compositions.length)];
+    currentComposition = compositions.get(randomInt(compositions.size()));
   }
 
   currentComposition.run();

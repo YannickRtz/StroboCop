@@ -21,7 +21,7 @@ public class ColorPalette {
   }
   
   public Color[] toArray() {
-    return colors.toArray();
+    return (Color[])colors.toArray();
   }
 
 }
