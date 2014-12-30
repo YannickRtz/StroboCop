@@ -10,7 +10,6 @@ public class StroboskopEffect extends Effect {
   
   public StroboskopEffect(int screenNumber, float propability, Color... colorArray) {
     this.screenNumber = screenNumber;
-    this.randomMode = randomMode;
     this.propability = propability;
     colors = colorArray;
     currentColor = colors[randomInt(colors.length)];
@@ -21,14 +20,10 @@ public class StroboskopEffect extends Effect {
   
   public void run() {
     if (analyser.getBeat()) {
-      if (randomMode) {
-        if (random(1) < 0.5 && animating) {
-          animating = false;
-        } else if (random(1) < propability && !animating) {
-          animating = true;
-        }
-      } else {
-        animating = !animating;
+      if (random(1) < 0.5 && animating) {
+        animating = false;
+      } else if (random(1) < propability && !animating) {
+        animating = true;
       }
     }
     if (animating == false) {
