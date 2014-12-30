@@ -5,18 +5,21 @@ public class WalkingEffect extends Effect {
   private boolean timedMode = false;
   private int timedTempo;
   private int startFrame = 0;
+  private boolean randomMode = false;
   
   public WalkingEffect(Color... colorArray) {
     colors = colorArray;
   }
   
-  public WalkingEffect(int offset, Color... colorArray) {
+  public WalkingEffect(boolean randomMode, int offset, Color... colorArray) {
     colors = colorArray;
+    this.randomMode = randomMode;
     walkerPosition += offset;
   }
   
-  public WalkingEffect(int offset, int tempo, Color... colorArray) {
+  public WalkingEffect(boolean randomMode, int offset, int tempo, Color... colorArray) {
     colors = colorArray;
+    this.randomMode = randomMode;
     walkerPosition += offset;
     timedMode = true;
     startFrame = frameCount;
@@ -24,20 +27,26 @@ public class WalkingEffect extends Effect {
   }
 
   public void run() {
-    
     if (timedMode) {
       int frameDistance = (int)((frameCount - startFrame) % (float)(timedTempo / (1000 / FRAMERATE)));
       if (frameDistance == 0) {
-        walkerPosition = (walkerPosition + 1) % NUMBER_OF_SCREENS;
+        advanceWalker();
       }
     } else {
       if (analyser.getBeat()) {
-        walkerPosition = (walkerPosition + 1) % NUMBER_OF_SCREENS;
+        advanceWalker();
       }
     }
     
     Color randomColor = colors[randomInt(colors.length)];
     writeMessageAt(randomColor, walkerPosition + 1); // Not zero based...
   }
-
+  
+  public void advanceWalker() {
+    if (randomMode) {
+      walkerPosition = randomInt(NUMBER_OF_SCREENS);
+    } else {
+      walkerPosition = (walkerPosition + 1) % NUMBER_OF_SCREENS;
+    }
+  }
 }
