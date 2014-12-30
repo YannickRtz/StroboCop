@@ -13,16 +13,29 @@ public void compose() {
  * WalkingEffect(eventType, isRandomMode, offset, colors)
  */
 
-  // Declare effects here.
-  Effect test = new TestEffect();
-  Effect walking = new WalkingEffect(Color.BLUE);
-  Effect background = new BackgroundColorEffect(Color.YELLOW);
+  // DECLARE EFFECTS HERE
+  // Walkers:
+  Effect walkingBlue = new WalkingEffect(Color.BLUE);
+  Effect randomRedBeatWalker = new WalkingEffect(Analyser.BEAT, true, 0, new ColorPalette(Color.RED));
+  Effect randomWhiteHatWalker = new WalkingEffect(Analyser.HAT, true, 0, new ColorPalette(Color.WHITE));
   
+  // Backgrounds:
+  Effect whiteBackground = new BackgroundColorEffect(Color.WHITE);
+  
+  // Stroboskops:
+  Effect randomWhiteStroboskop = new StroboskopEffect(Analyser.BEAT, -1, 0.3, new ColorPalette(Color.WHITE));
+  
+  // Flashs:
+  Effect whiteFlashOnBeat = new FlashOnBeatEffect(Analyser.BEAT, false, -1, 1000, new ColorPalette(Color.WHITE));
+  
+  // Breathings:
+  Effect darkRedBreathing = new BreathingEffect(0, 3000, 0, new ColorPalette(new Color(255, 0, 0, 70)));
+  
+  
+  // DECLARE COMPOSITIONS HERE
   compositions = new ArrayList<Composition>();
-  
-  // Declare compositions here.
-  compositions.add(new Composition(test));
-  compositions.add(new Composition(background, walking));
+  compositions.add(new Composition(darkRedBreathing, randomWhiteStroboskop));
+  compositions.add(new Composition(whiteBackground, walkingBlue, randomRedBeatWalker));
   
   // Pick a random initial composition.
   currentComposition = compositions.get(0);
