@@ -15,8 +15,8 @@ public void compose() {
 
   // DECLARE EFFECTS HERE
   // Walkers:
-  Effect walkingBlue = new WalkingEffect(Color.BLUE);
-  Effect randomRedBeatWalker = new WalkingEffect(Analyser.BEAT, true, 0, new ColorPalette(Color.RED));
+  Effect walkingBlue = new WalkingEffect(Analyser.BEAT, false, 0, new ColorPalette(Color.BLUE));
+  Effect randomRedHatWalker = new WalkingEffect(Analyser.HAT, true, 0, new ColorPalette(Color.RED));
   Effect randomWhiteHatWalker = new WalkingEffect(Analyser.HAT, true, 0, new ColorPalette(Color.WHITE));
   
   // Backgrounds:
@@ -35,7 +35,7 @@ public void compose() {
   // DECLARE COMPOSITIONS HERE
   compositions = new ArrayList<Composition>();
   compositions.add(new Composition(darkRedBreathing, randomWhiteStroboskop));
-  compositions.add(new Composition(whiteBackground, walkingBlue, randomRedBeatWalker));
+  compositions.add(new Composition(whiteBackground, walkingBlue, randomRedHatWalker));
   
   // Pick a random initial composition.
   currentComposition = compositions.get(0);

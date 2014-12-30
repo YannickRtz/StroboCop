@@ -17,7 +17,7 @@ public class FlashOnBeatEffect extends Effect {
     this.eventType = eventType;
     flashs = new FlashOnceEffect[NUMBER_OF_SCREENS];
     for (int i = 0; i < NUMBER_OF_SCREENS; i++) {
-      flashs[i] = new FlashOnceEffect(i + 1, duration, flickerMode, colorArray);
+      flashs[i] = new FlashOnceEffect(i + 1, duration, flickerMode, palette);
     }
   }
 
