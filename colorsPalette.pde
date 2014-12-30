@@ -1,16 +1,16 @@
 public class ColorPalette {
 
-  public ArrayList<Color> colors;
+  public ArrayList<Color> colors = new ArrayList<Color>();
 
-  public ColorPalette(String... colors) {
-    for (String colorString : colors) {
+  public ColorPalette(String... colorStrings) {
+    for (String colorString : colorStrings) {
       colors.add(Color.decode(colorString));
     }
   }
 
   public void combinePalettes(ColorPalette toAdd) {
     for (Color colorString : toAdd.colors) {
-      this.colors.add(colorString);
+      colors.add(colorString);
     }
   }
 
