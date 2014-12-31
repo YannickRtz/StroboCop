@@ -31,6 +31,7 @@ public void compose() {
   Effect pastellishWalker4 = new WalkingEffect(Analyser.BEAT, false, 3, pastellish.getRandom());
   Effect pastellishWalker5 = new WalkingEffect(Analyser.BEAT, false, 4, pastellish.getRandom());
   Effect darkYellowRunner = new WalkingEffect(Analyser.BEAT, false, 0, 100, new ColorPalette("#D4DB00"));
+  Effect darkBlueRunner = new WalkingEffect(Analyser.BEAT, false, 0, 60, new ColorPalette(new Color(0,0,255,100)));
   
   // Backgrounds:
   Effect whiteBackground = new BackgroundColorEffect(Color.WHITE);
@@ -38,6 +39,7 @@ public void compose() {
   
   // Stroboskops:
   Effect randomWhiteStroboskop = new StroboskopEffect(Analyser.BEAT, -1, 2, 0.3, new ColorPalette(Color.WHITE));
+  Effect pastellishUltraStroboskop = new StroboskopEffect(Analyser.BEAT, 0, 2, 0.3, pastellish);
   
   // Flashs:
   Effect whiteFlashOnBeat = new FlashOnBeatEffect(Analyser.BEAT, false, -1, 1000, new ColorPalette(Color.WHITE));
@@ -45,31 +47,27 @@ public void compose() {
   Effect shrillFlickerOnBeat1 = new FlashOnBeatEffect(Analyser.BEAT, true, -1, 2000, shrill.getRandom());
   Effect shrillFlickerOnBeat2 = new FlashOnBeatEffect(Analyser.BEAT, true, -1, 2000, shrill.getRandom());
   Effect shrillFlickerOnBeat3 = new FlashOnBeatEffect(Analyser.BEAT, true, -1, 2000, shrill.getRandom());
-  Effect flashMeWhite = new FlashOnBeatEffect(Analyser.BEAT, false, 0, 1500, new ColorPalette(Color.WHITE));
+  Effect flashMeWhite = new FlashOnBeatEffect(Analyser.BEAT, false, 0, 800, new ColorPalette(Color.WHITE));
   
   // Breathings:
   Effect darkRedBreathing = new BreathingEffect(0, 4000, 0, new ColorPalette(new Color(255, 0, 0, 120)));
+  Effect randomEleganzBreathing = new BreathingEffect(-1, 2500, 0, almostEleganz);
   
   
   // DECLARE COMPOSITIONS HERE
   compositions = new ArrayList<Composition>();
   
-  compositions.add(new Composition(randomShrillBeatFlickerWalker,
-                                   randomShrillBeatFlickerWalker.clone(),
-                                   randomShrillBeatFlickerWalker.clone()));
-  compositions.add(new Composition(darkRedBreathing,
-                                   randomWhiteStroboskop,
-                                   randomWhiteStroboskop.clone()));
-  compositions.add(new Composition(whiteBackground,
-                                   walkingBlue,
-                                   randomRedHatWalker));
-  compositions.add(new Composition(whiteBackground,
-                                   randomEleganzWalker1,
-                                   randomEleganzWalker2,
-                                   randomEleganzWalker3));
+  compositions.add(new Composition(randomShrillBeatFlickerWalker, randomShrillBeatFlickerWalker.clone(), randomShrillBeatFlickerWalker.clone()));
+  compositions.add(new Composition(darkRedBreathing, randomWhiteStroboskop, randomWhiteStroboskop.clone()));
+  compositions.add(new Composition(whiteBackground, walkingBlue, randomRedHatWalker));
+  compositions.add(new Composition(whiteBackground, randomEleganzWalker1, randomEleganzWalker2, randomEleganzWalker3));
   compositions.add(new Composition(pastellishWalker1, pastellishWalker2, pastellishWalker3, pastellishWalker4, pastellishWalker5));
   compositions.add(new Composition(shrillFlickerOnBeat, shrillFlickerOnBeat.clone(), shrillFlickerOnBeat.clone()));
   compositions.add(new Composition(pastellishWalker1, pastellishWalker3, flashMeWhite));
+  compositions.add(new Composition(darkYellowRunner, shrillFlickerOnBeat, shrillFlickerOnBeat.clone()));
+  compositions.add(new Composition(randomEleganzWalker1, randomEleganzWalker2, randomEleganzWalker3, flashMeWhite));
+  compositions.add(new Composition(darkBlueRunner, pastellishUltraStroboskop));
+  compositions.add(new Composition(randomEleganzBreathing, randomEleganzBreathing.clone(), randomEleganzBreathing.clone(), randomRedHatWalker));
   
   // Pick a random initial composition.
   currentComposition = compositions.get(randomInt(compositions.size()));
