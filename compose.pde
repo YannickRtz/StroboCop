@@ -18,6 +18,9 @@ public void compose() {
   Effect walkingBlue = new WalkingEffect(Analyser.BEAT, false, 0, new ColorPalette(Color.BLUE));
   Effect randomRedHatWalker = new WalkingEffect(Analyser.HAT, true, 0, new ColorPalette(Color.RED));
   Effect randomWhiteHatWalker = new WalkingEffect(Analyser.HAT, true, 0, new ColorPalette(Color.WHITE));
+  Effect randomShrillBeatWalker = new WalkingEffect(Analyser.BEAT, true, 0, shrill);
+  Effect randomPastellishBeatWalker = new WalkingEffect(Analyser.BEAT, true, 0, pastellish);
+  Effect randomEleganzBeatWalker = new WalkingEffect(Analyser.BEAT, true, 0, almostEleganz);
   
   // Backgrounds:
   Effect whiteBackground = new BackgroundColorEffect(Color.WHITE);
@@ -29,12 +32,13 @@ public void compose() {
   Effect whiteFlashOnBeat = new FlashOnBeatEffect(Analyser.BEAT, false, -1, 1000, new ColorPalette(Color.WHITE));
   
   // Breathings:
-  Effect darkRedBreathing = new BreathingEffect(0, 3000, 0, new ColorPalette(new Color(255, 0, 0, 70)));
+  Effect darkRedBreathing = new BreathingEffect(0, 4000, 0, new ColorPalette(new Color(255, 0, 0, 120)));
   
   
   // DECLARE COMPOSITIONS HERE
   compositions = new ArrayList<Composition>();
-  compositions.add(new Composition(darkRedBreathing, randomWhiteStroboskop));
+  compositions.add(new Composition(randomShrillBeatWalker, randomShrillBeatWalker));
+  compositions.add(new Composition(darkRedBreathing, randomWhiteStroboskop, (Effect)randomWhiteStroboskop.clone()));
   compositions.add(new Composition(whiteBackground, walkingBlue, randomRedHatWalker));
   
   // Pick a random initial composition.
