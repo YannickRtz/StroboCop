@@ -8,11 +8,15 @@ public void drawClient() {
   if (client.available() > 0) {
     message = client.readBytes();
     //TODO: Better check for message integrity:
-    if (message.length > 5) {
+    if (message.length >= NUMBER_OF_SCREENS * 3) {
       colorScreens();
     } else {
       errorCounter++;
-      println("bad message" + errorCounter);
+      print("bad message" + errorCounter + ": ");
+      for (int i = 0; i < message.length; i++){
+        print(message[i] + " ");
+      }
+      println(".");
     }
   }
 }
