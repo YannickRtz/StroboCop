@@ -89,6 +89,9 @@ public void drawServer() {
     text("stereonessSnare: " + analyser.stereonessSnare, 300, 80);
 
     analyser.drawCache();
+    if (!SMALL_MODE) {
+      image(logo, screenWidth / 2 - logo.width / 2, 200);
+    }
   }
 }
 

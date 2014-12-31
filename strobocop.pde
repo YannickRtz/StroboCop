@@ -28,6 +28,7 @@ ArrayList<Composition> compositions;
 Composition currentComposition;
 Composition faderComposition;
 boolean oldDebugMode;
+PImage logo;
 
 // Configuration constants:
 int FRAMERATE = 30;  //NOTE(yannick): All effects should be framerate independent
@@ -42,6 +43,7 @@ public void init() {
 }
 
 void setup() {
+  logo = loadImage("logo.png");
   GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
   screenWidth = gd.getDisplayMode().getWidth();
   screenHeight = gd.getDisplayMode().getHeight();
