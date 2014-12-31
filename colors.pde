@@ -44,3 +44,13 @@ ColorPalette fireplace = new ColorPalette("#FFD20A",
                                           "#FF970F",
                                           "#FF5900",
                                           "#E00700");
+ColorPalette eighties = new ColorPalette("#8800D1",
+                                         "#DB0054",
+                                         "#00BFFF",
+                                         "#FF38CD",
+                                         "#CAFF0A");
+ColorPalette circus = new ColorPalette("#5500FF",
+                                       "#00F010",
+                                       "#FA0068",
+                                       "#FFD30F",
+                                       "#9E009B");
