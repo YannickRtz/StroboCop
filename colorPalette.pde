@@ -23,5 +23,9 @@ public class ColorPalette {
   public Color[] toArray() {
     return colors.toArray(new Color[colors.size()]);
   }
+  
+  public ColorPalette getRandom() {
+    return new ColorPalette(colors.get(randomInt(colors.size())));
+  }
 
 }

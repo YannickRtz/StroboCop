@@ -4,9 +4,9 @@ public abstract class Effect implements Cloneable {
     // Constructor
   }
   
-  public Object clone(){  
+  public Effect clone(){  
     try{  
-        return super.clone();  
+        return (Effect)super.clone();  
     }catch(Exception e){ 
         return null; 
     }
