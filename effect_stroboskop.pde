@@ -8,14 +8,18 @@ public class StroboskopEffect extends Effect {
   private boolean animationState = false;
   private float propability = 0;
   private int eventType = Analyser.BEAT;
+  private int framesDuration = 1;
+  private int framesCounter = 0;
 
   public StroboskopEffect(int eventType,
                           int screenNumber,
+                          int framesDuration,
                           float propability,
                           ColorPalette palette) {
     this.screenNumber = screenNumber;
     this.propability = propability;
     this.eventType = eventType;
+    this.framesDuration = framesDuration;
     colors = palette.toArray();
     currentColor = colors[randomInt(colors.length)];
     if (screenNumber == -1) {
@@ -47,9 +51,11 @@ public class StroboskopEffect extends Effect {
         } else if (screenNumber == -1) {
           writeMessageAt(currentColor, currentScreen);
         }
-        animationState = true;
-      } else {
-        animationState = false;
+      }
+      framesCounter++;
+      if (framesCounter == framesDuration) {
+        animationState = !animationState;
+        framesCounter = 0;
       }
     }
   }

@@ -7,7 +7,7 @@ public void compose() {
  * 
  * Constructors:
  * BackgroundColorEffect(color) <= Use always as first effect
- * StroboskopEffect(eventType, screenNumber, propability, colors)
+ * StroboskopEffect(eventType, screenNumber, framesDuration, propability, colors)
  * BreathingEffect(screenNumber, duration, offset, colors)
  * FlashOnBeatEffect(eventType, isFlickerMode, screenNumber, duration, colors)
  * WalkingEffect(eventType, isRandomMode, offset, colors)
@@ -23,7 +23,7 @@ public void compose() {
   Effect whiteBackground = new BackgroundColorEffect(Color.WHITE);
   
   // Stroboskops:
-  Effect randomWhiteStroboskop = new StroboskopEffect(Analyser.BEAT, -1, 0.3, new ColorPalette(Color.WHITE));
+  Effect randomWhiteStroboskop = new StroboskopEffect(Analyser.BEAT, -1, 2, 0.3, new ColorPalette(Color.WHITE));
   
   // Flashs:
   Effect whiteFlashOnBeat = new FlashOnBeatEffect(Analyser.BEAT, false, -1, 1000, new ColorPalette(Color.WHITE));
