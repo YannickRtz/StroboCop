@@ -27,6 +27,7 @@ byte[] oldMessage;
 ArrayList<Composition> compositions;
 Composition currentComposition;
 Composition faderComposition;
+boolean oldDebugMode;
 
 // Configuration constants:
 int FRAMERATE = 30;  //NOTE(yannick): All effects should be framerate independent

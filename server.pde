@@ -1,6 +1,7 @@
 // Server Code
 
 public void setupServer() {
+  oldDebugMode = DEBUG_MODE;
   server = new Server(this, 5204);
   minim = new Minim(this);
   audioIn = minim.getLineIn();
@@ -61,7 +62,12 @@ public void drawServer() {
     oldMessage = message.clone();
     colorScreens();
   }
-
+  
+  if (keyPressed) {
+    DEBUG_MODE = true;
+  } else {
+    DEBUG_MODE = oldDebugMode;
+  }
   if (DEBUG_MODE) {
     fill(0);
     rect(0, 0, screenWidth, 100);
