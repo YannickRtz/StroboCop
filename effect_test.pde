@@ -16,7 +16,7 @@ public class TestEffect extends Effect {
 
     if (analyser.getBeat()) {
       framesDistance = MIN_DISTANCE;
-      for (int i = 1; i <= (NUMBER_OF_SCREENS - 1); i++) {
+      for (int i = 1; i <= NUMBER_OF_SCREENS; i++) {
         writeMessageAt(random(255), random(255), random(255), i);
       }
     }

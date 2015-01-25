@@ -25,11 +25,11 @@ public void compose() {
   Effect randomEleganzWalker1 = new WalkingEffect(Analyser.BEAT, true, 0, almostEleganz.getRandom());
   Effect randomEleganzWalker2 = new WalkingEffect(Analyser.BEAT, true, 0, almostEleganz.getRandom());
   Effect randomEleganzWalker3 = new WalkingEffect(Analyser.BEAT, true, 0, almostEleganz.getRandom());
-  Effect pastellishWalker1 = new WalkingEffect(Analyser.BEAT, false, 0, pastellish.getRandom());
-  Effect pastellishWalker2 = new WalkingEffect(Analyser.BEAT, false, 1, pastellish.getRandom());
-  Effect pastellishWalker3 = new WalkingEffect(Analyser.BEAT, false, 2, pastellish.getRandom());
-  Effect pastellishWalker4 = new WalkingEffect(Analyser.BEAT, false, 3, pastellish.getRandom());
-  Effect pastellishWalker5 = new WalkingEffect(Analyser.BEAT, false, 4, pastellish.getRandom());
+  //Effect pastellishWalker1 = new WalkingEffect(Analyser.BEAT, false, 0, pastellish.getRandom());
+  //Effect pastellishWalker2 = new WalkingEffect(Analyser.BEAT, false, 1, pastellish.getRandom());
+  //Effect pastellishWalker3 = new WalkingEffect(Analyser.BEAT, false, 2, pastellish.getRandom());
+  //Effect pastellishWalker4 = new WalkingEffect(Analyser.BEAT, false, 3, pastellish.getRandom());
+  //Effect pastellishWalker5 = new WalkingEffect(Analyser.BEAT, false, 4, pastellish.getRandom());
   Effect darkYellowRunner = new WalkingEffect(Analyser.BEAT, false, 0, 100, new ColorPalette("#D4DB00"));
   Effect darkBlueRunner = new WalkingEffect(Analyser.BEAT, false, 0, 60, new ColorPalette(new Color(0,0,255,100)));
   Effect pinkRunner = new WalkingEffect(Analyser.BEAT, false, 2, 110, new ColorPalette("#FF85BE"));
@@ -91,11 +91,11 @@ public void compose() {
   Effect randomColdBreathing1 = new BreathingEffect(-1, 700, 0, cold);
   Effect randomColdBreathing2 = new BreathingEffect(-1, 800, 50, cold);
   Effect randomColdBreathing3 = new BreathingEffect(-1, 750, 60, cold);
-  Effect greenWave1 = new BreathingEffect(1, 2000, 0, new ColorPalette(new Color(0, 255, 0, 100)));
-  Effect greenWave2 = new BreathingEffect(2, 2000, 400, new ColorPalette(new Color(0, 255, 0, 100)));
-  Effect greenWave3 = new BreathingEffect(3, 2000, 800, new ColorPalette(new Color(0, 255, 0, 100)));
-  Effect greenWave4 = new BreathingEffect(4, 2000, 1200, new ColorPalette(new Color(0, 255, 0, 100)));
-  Effect greenWave5 = new BreathingEffect(5, 2000, 1600, new ColorPalette(new Color(0, 255, 0, 100)));
+  // Effect greenWave1 = new BreathingEffect(1, 2000, 0, new ColorPalette(new Color(0, 255, 0, 100)));
+  // Effect greenWave2 = new BreathingEffect(2, 2000, 400, new ColorPalette(new Color(0, 255, 0, 100)));
+  // Effect greenWave3 = new BreathingEffect(3, 2000, 800, new ColorPalette(new Color(0, 255, 0, 100)));
+  // Effect greenWave4 = new BreathingEffect(4, 2000, 1200, new ColorPalette(new Color(0, 255, 0, 100)));
+  // Effect greenWave5 = new BreathingEffect(5, 2000, 1600, new ColorPalette(new Color(0, 255, 0, 100)));
   Effect fastEightiesBreathing = new BreathingEffect(-1, 800, 0, eighties);
   
   
@@ -104,9 +104,9 @@ public void compose() {
   compositions.add(new Composition(darkRedBreathing, randomWhiteStroboskop, randomWhiteStroboskop.clone()));
   compositions.add(new Composition(whiteBreathing, walkingBlue, randomRedHatWalker));
   compositions.add(new Composition(whiteBackground, randomEleganzWalker1, randomEleganzWalker2, randomEleganzWalker3, shrillFlickerOnBeat));
-  compositions.add(new Composition(pastellishWalker1, pastellishWalker2, pastellishWalker3, pastellishWalker4, pastellishWalker5));
+  // compositions.add(new Composition(pastellishWalker1, pastellishWalker2, pastellishWalker3, pastellishWalker4, pastellishWalker5));
   compositions.add(new Composition(shrillFlickerOnBeat, shrillFlickerOnBeat.clone(), shrillFlickerOnBeat.clone()));
-  compositions.add(new Composition(pastellishWalker1, pastellishWalker3, flashMeWhite));
+  //compositions.add(new Composition(pastellishWalker1, pastellishWalker3, flashMeWhite));
   compositions.add(new Composition(darkYellowRunner, shrillFlickerOnBeat, shrillFlickerOnBeat.clone()));
   compositions.add(new Composition(darkBlueRunner, pastellishUltraStroboskop));
   compositions.add(new Composition(randomEleganzBreathing, randomEleganzBreathing.clone(), randomEleganzBreathing.clone(), randomEleganzBreathing.clone(), randomRedHatWalker));
@@ -122,7 +122,7 @@ public void compose() {
   compositions.add(new Composition(darkBlueRunner, randomFireplaceFlicker));
   compositions.add(new Composition(whiteBackground, yellowRunner, greenRunner, pinkRunner, cyanRunner, randomBlackWalker));
   compositions.add(new Composition(randomYellowFlash, randomCyanFlash, randomMagentaFlash));
-  compositions.add(new Composition(randomFireplaceFlicker, greenWave1, greenWave2, greenWave3, greenWave4, greenWave5));
+  //compositions.add(new Composition(randomFireplaceFlicker, greenWave1, greenWave2, greenWave3, greenWave4, greenWave5));
   compositions.add(new Composition(flashMeGreen, flashMeBlue, flashMeRed));
   compositions.add(new Composition(grayBackground, coldUltraStroboskop, randomRedHatWalker, randomRedHatWalker));
   compositions.add(new Composition(randomCircusWalker1, randomCircusWalker2, randomCircusWalker3, randomCircusWalker4, randomCircusWalker5));

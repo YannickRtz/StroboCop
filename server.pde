@@ -41,7 +41,9 @@ public void drawServer() {
 
   // Pick a new, random composition on pause.
   if (analyser.secondsSincePause == 0) {
-    currentComposition = compositions.get(randomInt(compositions.size()));
+    compositionIndex = randomInt(compositions.size());
+    compositionIndex = 12;
+    currentComposition = compositions.get(compositionIndex);
   }
 
   currentComposition.run();
@@ -101,9 +103,10 @@ public void stopServer() {
   server.stop();
 }
 
-public int mixColor(float c1, float c2, float alpha) {
+public int alphaBlend(float c1, float c2, float alpha) {
   if (alpha == 255) { return (int)c2; }
-  return (int)(c1 * ((255 - alpha) / 255) + c2 * (alpha / 255));
+  int result = (int)(c1 * (1 - (alpha / 255)) + c2 * (alpha / 255));
+  return result;
 }
 
 public void writeMessageAt(float c1, float c2, float c3, int index) {
@@ -115,9 +118,13 @@ public void writeMessageAt(float c1, float c2, float c3, int index) {
 
 public void writeMessageAt(float c1, float c2, float c3, float alpha, int index) {
   index = (index - 1) * 3;
-  message[index] = intToByte(mixColor(byteToInt(message[index]), c1, alpha));
-  message[index + 1] = intToByte(mixColor(byteToInt(message[index + 1]), c2, alpha));
-  message[index + 2] = intToByte(mixColor(byteToInt(message[index + 2]), c3, alpha));
+  if (index < message.length - 1 && index >= 0) {
+    message[index] = intToByte(alphaBlend(byteToInt(message[index]), c1, alpha));
+    message[index + 1] = intToByte(alphaBlend(byteToInt(message[index + 1]), c2, alpha));
+    message[index + 2] = intToByte(alphaBlend(byteToInt(message[index + 2]), c3, alpha));
+  } else {
+    println("Message index out of bounds: " + index + "! Current composition: " + compositionIndex);
+  }
 }
 
 public void writeMessageAt(Color c0, int index) {

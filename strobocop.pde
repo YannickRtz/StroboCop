@@ -22,6 +22,7 @@ Analyser analyser;
 int screenHeight;
 int screenWidth;
 int errorCounter;
+int compositionIndex;
 byte[] message;
 byte[] oldMessage;
 ArrayList<Composition> compositions;
