@@ -44,7 +44,6 @@ public void compose() {
   Effect randomCircusWalker5 = new WalkingEffect(Analyser.BEAT, true, 0, circus.getRandom());
   
   // Backgrounds:
-  Effect grayBackground = new BackgroundColorEffect(Color.GRAY);
   Effect whiteBackground = new BackgroundColorEffect(Color.WHITE);
   Effect redBackground = new BackgroundColorEffect(Color.RED);
   Effect blueBackground = new BackgroundColorEffect(Color.BLUE);
@@ -124,7 +123,7 @@ public void compose() {
   compositions.add(new Composition(randomYellowFlash, randomCyanFlash, randomMagentaFlash));
   //compositions.add(new Composition(randomFireplaceFlicker, greenWave1, greenWave2, greenWave3, greenWave4, greenWave5));
   compositions.add(new Composition(flashMeGreen, flashMeBlue, flashMeRed));
-  compositions.add(new Composition(grayBackground, coldUltraStroboskop, randomRedHatWalker, randomRedHatWalker));
+  compositions.add(new Composition(coldUltraStroboskop, randomRedHatWalker, randomRedHatWalker));
   compositions.add(new Composition(randomCircusWalker1, randomCircusWalker2, randomCircusWalker3, randomCircusWalker4, randomCircusWalker5));
   compositions.add(new Composition(flashMeWhite, eightiesFlashback));
   compositions.add(new Composition(blueBackground, randomColdBreathing1, randomColdBreathing2, randomColdBreathing3, randomCircusWalker1, randomCircusWalker2, randomCircusWalker3));

@@ -6,6 +6,9 @@ import java.awt.GraphicsEnvironment;
 import processing.net.*;
 import ddf.minim.*;
 import ddf.minim.analysis.*;
+import javax.swing.UIManager;
+import javax.swing.JOptionPane;
+import javax.swing.LookAndFeel;
 
 // Globals:
 Client client;
@@ -44,6 +47,31 @@ public void init() {
 }
 
 void setup() {
+  if (SERVER_IP == "") {
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    } catch (Exception e) {
+      println(e);
+    }
+    int serverValue = JOptionPane.showConfirmDialog(null,
+                                                    "Is this computer the server?",
+                                                    "Check",
+                                                    JOptionPane.YES_NO_OPTION);
+    SERVER_MODE = (serverValue == JOptionPane.YES_OPTION);
+    String inputValue = JOptionPane.showInputDialog("How many screens are involved?");
+    NUMBER_OF_SCREENS = Integer.parseInt(inputValue);
+    inputValue = JOptionPane.showInputDialog("Which screens are connected to this computer?\n" +
+                                                    "Comma separated list of numbers e.g. for the first two screens:\n" +
+                                                    "\"1,2\"");
+    String[] strArray = inputValue.split(",");
+    MY_SCREENS = new int[strArray.length];
+    for (int i = 0; i < strArray.length; i++) {
+      MY_SCREENS[i] = Integer.parseInt(strArray[i]);
+    }
+    if (!SERVER_MODE) {
+      SERVER_IP = JOptionPane.showInputDialog("What is the server IP?");
+    }
+  }
   logo = loadImage("logo.png");
   GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
   screenWidth = gd.getDisplayMode().getWidth();

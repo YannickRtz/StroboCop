@@ -21,6 +21,9 @@ public void setupServer() {
 
   analyser = new Analyser();
   
+  JOptionPane.showMessageDialog(null, "The server IP is" + server.ip(),
+             "Server IP", JOptionPane.INFORMATION_MESSAGE);
+  
   compose();
 }
 
@@ -42,7 +45,6 @@ public void drawServer() {
   // Pick a new, random composition on pause.
   if (analyser.secondsSincePause == 0) {
     compositionIndex = randomInt(compositions.size());
-    compositionIndex = 12;
     currentComposition = compositions.get(compositionIndex);
   }
 
