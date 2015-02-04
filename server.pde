@@ -21,7 +21,7 @@ public void setupServer() {
 
   analyser = new Analyser();
   
-  JOptionPane.showMessageDialog(null, "The server IP is" + server.ip(),
+  JOptionPane.showMessageDialog(null, "The server IP is: " + server.ip(),
              "Server IP", JOptionPane.INFORMATION_MESSAGE);
   
   compose();
@@ -51,6 +51,12 @@ public void drawServer() {
   currentComposition.run();
   faderComposition.run();
 
+  // Check for the interesting character (we don't want it in there)
+  for (int i = message.length - 1; i >= 0; i--) {
+    message[i] = message[i] == 1 ? 1 : message[i];
+  }
+  message[NUMBER_OF_SCREENS] = (byte)1;
+  
   boolean somethingChanged = false;
   if (oldMessage != null) {
     for (int i = message.length - 1; i >= 0; i--) {

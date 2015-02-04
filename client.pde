@@ -6,9 +6,10 @@ public void setupClient() {
 
 public void drawClient() {
   if (client.available() > 0) {
-    message = client.readBytes();
-    //TODO: Better check for message integrity:
-    if (message.length >= NUMBER_OF_SCREENS * 3) {
+    byte interesting = 1;
+    int success = client.readBytesUntil(interesting, message);
+    
+    if (message.length == success) {
       colorScreens();
     } else {
       errorCounter++;

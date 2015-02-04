@@ -88,7 +88,7 @@ void setup() {
 
   frameRate(FRAMERATE);
 
-  message = new byte[NUMBER_OF_SCREENS * 3];
+  message = new byte[NUMBER_OF_SCREENS * 3 + 1];
 
   if (SERVER_MODE) {
     setupServer();
