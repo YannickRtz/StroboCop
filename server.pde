@@ -53,9 +53,9 @@ public void drawServer() {
 
   // Check for the interesting character (we don't want it in there)
   for (int i = message.length - 1; i >= 0; i--) {
-    message[i] = message[i] == 1 ? 1 : message[i];
+    message[i] = message[i] == 1 ? 0 : message[i];
   }
-  message[NUMBER_OF_SCREENS] = (byte)1;
+  message[NUMBER_OF_SCREENS * 3] = (byte)1;
   
   boolean somethingChanged = false;
   if (oldMessage != null) {
@@ -126,7 +126,7 @@ public void writeMessageAt(float c1, float c2, float c3, int index) {
 
 public void writeMessageAt(float c1, float c2, float c3, float alpha, int index) {
   index = (index - 1) * 3;
-  if (index < message.length - 1 && index >= 0) {
+  if (index < message.length - 2 && index >= 0) {
     message[index] = intToByte(alphaBlend(byteToInt(message[index]), c1, alpha));
     message[index + 1] = intToByte(alphaBlend(byteToInt(message[index + 1]), c2, alpha));
     message[index + 2] = intToByte(alphaBlend(byteToInt(message[index + 2]), c3, alpha));
