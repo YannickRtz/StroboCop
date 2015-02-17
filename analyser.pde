@@ -1,23 +1,36 @@
 public class Analyser {
   
+  /*
+   * Note: At the moment there is a thing called buffer and a thing called freqCache
+   * in this class. The cache is the newer thing and is supposed to replace the
+   * buffer in the long run.
+   */
+  
   private int BUFFER_SIZE = FRAMERATE * 5;
+  private int CACHE_SIZE = FRAMERATE * 5;
+  private int FREQ_BAND_COUNT = 27; // Number of frequency bands beatdetect is looking at
   private MainBufferObject[] buffer = new MainBufferObject[BUFFER_SIZE];
+  private boolean[][] freqCache = new boolean[CACHE_SIZE][FREQ_BAND_COUNT];
+  
   private int bufferIndex = 0;
+  private int cacheIndex = 0;
   private int guessedBeatIndex = 0;
   private int lastPauseIndex = 0;
+  private float guessedTempoInFrames = 0;
+  
   private int onsetCooldown = 0;
   private int kickCooldown = 0;
   private int snareCooldown = 0;
   private int hatCooldown = 0;
+
   private float SILENCE_THRESHOLD = FRAMERATE * 2.5;
-  private float guessedTempoInFrames = 0;
   private int MIN_EXPECTED_TEMPO = 55;
   private int MAX_EXPECTED_TEMPO = 240;
-  private float LOUDNESS_THRESHOLD = 2; // If loudness falls below this, it's considered silence
+  private float LOUDNESS_THRESHOLD = 2; // If loudness is below this, it's considered silence
   private int MAX_TEMPO_AGE = 40;
   private int COOLDOWN_FRAMES = 5;
   
-  // Event types
+  // Event types enumeration
   static final int ONSET = 0;
   static final int KICK = 1;
   static final int SNARE = 2;
@@ -25,24 +38,20 @@ public class Analyser {
   static final int BEAT = 4;
   
   // Public variables
-  public int regularity;
-  public int mostRegularEvent;
   public float stereonessOnset = 0;
   public float stereonessKick = 0;
   public float stereonessHat = 0;
   public float stereonessSnare = 0;
-  public int mostLeftEvent;
-  public int mostRightEvent;
   public int detectedRegularity = 0;
   public float guessedTempo = 0;
   public float tempoGuessAge = 0;
-  public boolean isGuessedBeat = false;
   public float secondsSincePause = 0;
   public float loudness = 0;
   public boolean coolOnset = false;
   public boolean coolKick = false;
   public boolean coolHat = false;
   public boolean coolSnare = false;
+  public boolean isGuessedBeat = false;
   
   public Analyser() {
     for (int i = 0; i < BUFFER_SIZE; i++) {
@@ -66,11 +75,13 @@ public class Analyser {
   // BeatDetect.detect() has to be executed before this.
   public void analyse() {
     fillBuffer();
+    fillCache();
     
     onsetCooldown--;
     kickCooldown--;
     snareCooldown--;
     hatCooldown--;
+    
     if (buffer[bufferIndex].mix.isOnset && onsetCooldown <= 0) {
       onsetCooldown = COOLDOWN_FRAMES;
       coolOnset = true;
@@ -95,7 +106,7 @@ public class Analyser {
     } else {
       coolHat = false;
     }
-      
+    
     analyseSilence();
     analyseTempo();
     analyseStereoness();
@@ -121,6 +132,13 @@ public class Analyser {
     
     bufferIndex = (bufferIndex + 1) % BUFFER_SIZE;
     buffer[bufferIndex] = newBufferItem;
+  }
+  
+  private void fillCache() {
+    for (int bandIndex = 0; bandIndex < FREQ_BAND_COUNT; bandIndex++) {
+      freqCache[cacheIndex][bandIndex] = beatFreqMix.isOnset(bandIndex);
+    }
+    cacheIndex = (cacheIndex + 1) % CACHE_SIZE;
   }
   
   private void analyseSilence() {    
@@ -315,6 +333,21 @@ public class Analyser {
   
   // Debug function
   public void drawCache() {
+    fill(255);
+    int relativeIndex;
+    for (int indexToDraw = 0; indexToDraw < CACHE_SIZE; indexToDraw++) {
+      relativeIndex = (cacheIndex + CACHE_SIZE - indexToDraw - 1) % CACHE_SIZE;
+      for (int bandToDraw = 0; bandToDraw < FREQ_BAND_COUNT; bandToDraw++) {
+        if (freqCache[indexToDraw][bandToDraw]) {
+          rect(screenWidth - 10 - relativeIndex * 3,
+              5 + bandToDraw * 3, 3, 3);
+        }
+      }
+    }
+  }
+  
+  // Debug function
+  public void drawBuffer() {
     fill(100);
     if (buffer[bufferIndex].mix.isOnset) { fill(255); }
     text("isOnset", screenWidth - 100, 20);
