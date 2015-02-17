@@ -47,6 +47,9 @@ public void drawServer() {
   writeMessageAll(Color.BLACK);
 
   // Pick a new, random composition on pause.
+  if (analyser.secondsSincePause > 100) {
+    analyser.secondsSincePause = 0;
+  }
   if (analyser.secondsSincePause == 0) {
     compositionIndex = randomInt(compositions.size());
     currentComposition = compositions.get(compositionIndex);
@@ -78,16 +81,31 @@ public void drawServer() {
   }
   
   if (keyPressed) {
-    DEBUG_MODE = true;
-  } else {
-    DEBUG_MODE = oldDebugMode;
+    if (key == CODED) {
+      if (keyCode == UP) {
+        compositionIndex = (compositionIndex + 1) % compositions.size();
+        currentComposition = compositions.get(compositionIndex);
+      }
+      if (keyCode == DOWN) {
+        compositionIndex = (compositionIndex + compositions.size() - 1) % compositions.size();
+        currentComposition = compositions.get(compositionIndex);
+      }
+      if (keyCode == LEFT) {
+        DEBUG_MODE = true;
+      }
+      if (keyCode == RIGHT) {
+        DEBUG_MODE = false;
+      }
+    }
   }
+  
   if (DEBUG_MODE) {
     fill(0);
     rect(0, 0, screenWidth, 100);
     fill(255);
 
     text("secondsSincePause: " + analyser.secondsSincePause, 20, 15);
+    text("Composition Nr: " + compositionIndex, 20, 30);
     text("loudness: " + analyser.loudness, 20, 45);
     text("guessedTempo: " + analyser.guessedTempo, 20, 60);
     text("detectedRegularity: " + analyser.detectedRegularity, 20, 75);

@@ -29,7 +29,7 @@ public class Analyser {
   private int HIT_THRESHOLD = 8;
   private int MIN_EXPECTED_TEMPO = 55;
   private int MAX_EXPECTED_TEMPO = 240;
-  private float LOUDNESS_THRESHOLD = 4 / (float)BUFFER_SIZE; // If loudness is below this, it's considered silence
+  private float LOUDNESS_THRESHOLD = 0.018; // If loudness is below this, it's considered silence
   private int MAX_TEMPO_AGE = 40;
   private int COOLDOWN_FRAMES = 5;
   
