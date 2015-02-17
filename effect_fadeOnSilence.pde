@@ -1,7 +1,7 @@
 public class FadeOnSilenceEffect extends Effect {
 
   private Color myColor;
-  private float LOUDNESS_THRESHOLD = 5;
+  private float LOUDNESS_THRESHOLD = 0.02;
   
   public FadeOnSilenceEffect(Color c0) {
     myColor = c0;

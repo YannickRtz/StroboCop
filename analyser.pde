@@ -6,8 +6,8 @@ public class Analyser {
    * buffer in the long run.
    */
   
-  private int BUFFER_SIZE = FRAMERATE * 5;
-  private int CACHE_SIZE = FRAMERATE * 5;
+  private int BUFFER_SIZE = FRAMERATE * 6;
+  private int CACHE_SIZE = FRAMERATE * 10;
   private int FREQ_BAND_COUNT = 27; // Number of frequency bands beatdetect is looking at
   private MainBufferObject[] buffer = new MainBufferObject[BUFFER_SIZE];
   private boolean[][] freqCache = new boolean[CACHE_SIZE][FREQ_BAND_COUNT];
@@ -17,6 +17,8 @@ public class Analyser {
   private int guessedBeatIndex = 0;
   private int lastPauseIndex = 0;
   private float guessedTempoInFrames = 0;
+  private int representativeFrame = 0;
+  private int lastRepresentativeFrame = 0;
   
   private int onsetCooldown = 0;
   private int kickCooldown = 0;
@@ -24,9 +26,10 @@ public class Analyser {
   private int hatCooldown = 0;
 
   private float SILENCE_THRESHOLD = FRAMERATE * 2.5;
+  private int HIT_THRESHOLD = 8;
   private int MIN_EXPECTED_TEMPO = 55;
   private int MAX_EXPECTED_TEMPO = 240;
-  private float LOUDNESS_THRESHOLD = 2; // If loudness is below this, it's considered silence
+  private float LOUDNESS_THRESHOLD = 4 / (float)BUFFER_SIZE; // If loudness is below this, it's considered silence
   private int MAX_TEMPO_AGE = 40;
   private int COOLDOWN_FRAMES = 5;
   
@@ -108,7 +111,7 @@ public class Analyser {
     }
     
     analyseSilence();
-    analyseTempo();
+    analyseBufferTempo();
     analyseStereoness();
   }
   
@@ -136,7 +139,7 @@ public class Analyser {
   
   private void fillCache() {
     for (int bandIndex = 0; bandIndex < FREQ_BAND_COUNT; bandIndex++) {
-      freqCache[cacheIndex][bandIndex] = beatFreqMix.isOnset(bandIndex);
+      freqCache[cacheIndex][bandIndex] = beatFreq.isOnset(bandIndex);
     }
     cacheIndex = (cacheIndex + 1) % CACHE_SIZE;
   }
@@ -157,7 +160,7 @@ public class Analyser {
     }
     
     // Onset is more usefull for pause detection, kick less usefull
-    loudness = (float)(onsetCounter * 2 + hatCounter + snareCounter) / 4;
+    loudness = ((float)(onsetCounter * 2 + hatCounter + snareCounter) / 4) / (float)BUFFER_SIZE;
     
     if (loudness <= LOUDNESS_THRESHOLD) {
       lastPauseIndex = frameCount;
@@ -204,7 +207,7 @@ public class Analyser {
     stereonessSnare /= BUFFER_SIZE;
   }
   
-  public void analyseTempo() {
+  public void analyseBufferTempo() {
     int index = 0;
     int hits;
     int lastHit = -1;
@@ -306,6 +309,76 @@ public class Analyser {
     
     tempoGuessAge = (float)(frameCount - guessedBeatIndex) / FRAMERATE;
   }
+
+public void analyseCacheTempo() {
+    // First step: Where are potential hits in time?
+    ArrayList<Integer> hitList = new ArrayList<Integer>();
+    // for (int index = 0; index < CACHE_SIZE; index++) {
+    for (int index = CACHE_SIZE - 1; index >= 0; index--) {
+      int relativeIndex = (cacheIndex + CACHE_SIZE - index) % CACHE_SIZE;
+      int hitCount = 0;
+      for (int band = 0; band < FREQ_BAND_COUNT; band++) {
+        if (freqCache[relativeIndex][band]) {
+          hitCount++;
+        }
+      }
+      if (hitCount >= HIT_THRESHOLD) {
+        hitList.add(frameCount - index);
+      }
+    }
+    
+    // Second step: What are the distances between potential hits?
+    // And what is the most common speed they are suggesting?
+    HashMap<Float, Integer> hitDistances = new HashMap<Float, Integer>();
+    lastRepresentativeFrame = representativeFrame;
+    representativeFrame = 0;
+    detectedRegularity = 0;
+    
+    for (int hitIndex = 0; hitIndex < hitList.size(); hitIndex++) {
+      for (int startHitIndex = hitIndex + 1;
+           startHitIndex < startHitIndex + 2 && startHitIndex < hitList.size();
+           startHitIndex++) {
+        int distance = hitList.get(startHitIndex) - hitList.get(hitIndex);
+        float potentialSpeed;
+        if (distance > 2) {
+          potentialSpeed = 60 * ((float)FRAMERATE / (float)distance);
+        } else {
+          potentialSpeed = 0;
+        }
+        if (potentialSpeed > MAX_EXPECTED_TEMPO && potentialSpeed < MAX_EXPECTED_TEMPO * 2) {
+          potentialSpeed /= 2;
+        } else if (potentialSpeed < MIN_EXPECTED_TEMPO && potentialSpeed > MIN_EXPECTED_TEMPO / 2) {
+          potentialSpeed *= 2;
+        } else if (potentialSpeed < MIN_EXPECTED_TEMPO / 2 || potentialSpeed > MAX_EXPECTED_TEMPO * 2) {
+          potentialSpeed = 0;
+        }
+        if (potentialSpeed != 0) {
+          if (!hitDistances.containsKey(potentialSpeed)) {
+            hitDistances.put(potentialSpeed, 1);
+          } else {
+            hitDistances.put(potentialSpeed, hitDistances.get(potentialSpeed) + 1);
+            if (hitDistances.get(potentialSpeed) > detectedRegularity) {
+              detectedRegularity = hitDistances.get(potentialSpeed);
+              guessedTempo = potentialSpeed;
+              representativeFrame = hitList.get(startHitIndex);
+            }
+          }
+        }
+      }
+    }
+    
+    float beatDistanceInFrames = (60 * FRAMERATE) / guessedTempo;
+    
+    float tempoOffset = (frameCount - lastRepresentativeFrame) % beatDistanceInFrames;
+    println("TempoOffset: " + tempoOffset + " beatDist: " + beatDistanceInFrames + " representativeFrame: " + lastRepresentativeFrame);
+    if (tempoOffset < 0.5 || tempoOffset > beatDistanceInFrames + 0.5) {
+      isGuessedBeat = true;
+    } else {
+      isGuessedBeat = false;
+    }
+    
+    tempoGuessAge = (float)(frameCount - representativeFrame) / FRAMERATE;
+  }
   
   public boolean getBeat() {
     return getBeat(BEAT);
@@ -333,10 +406,17 @@ public class Analyser {
   
   // Debug function
   public void drawCache() {
-    fill(255);
+    fill(150);
     int relativeIndex;
+    int hitCount;
     for (int indexToDraw = 0; indexToDraw < CACHE_SIZE; indexToDraw++) {
       relativeIndex = (cacheIndex + CACHE_SIZE - indexToDraw - 1) % CACHE_SIZE;
+      hitCount = 0;
+      for (int bandToDraw = 0; bandToDraw < FREQ_BAND_COUNT; bandToDraw++) {
+        if (freqCache[indexToDraw][bandToDraw]) { hitCount++; }
+      }
+      if (hitCount >= HIT_THRESHOLD) { fill(255); } else { fill(150); }
+      if (relativeIndex == frameCount - lastRepresentativeFrame - 1) { fill(255,0,0); }
       for (int bandToDraw = 0; bandToDraw < FREQ_BAND_COUNT; bandToDraw++) {
         if (freqCache[indexToDraw][bandToDraw]) {
           rect(screenWidth - 10 - relativeIndex * 3,
@@ -369,16 +449,16 @@ public class Analyser {
     for (int i = 0; i < BUFFER_SIZE - 1; i++) {
       index = (bufferIndex + BUFFER_SIZE - i) % BUFFER_SIZE;
       if (buffer[index].mix.isOnset) {
-        rect(screenWidth - 105 - i * 5, 10, 3, 10);
+        rect(screenWidth - 105 - i * 3, 10, 2, 10);
       }
       if (buffer[index].mix.isKick) {
-        rect(screenWidth - 105 - i * 5, 25, 3, 10);
+        rect(screenWidth - 105 - i * 3, 25, 2, 10);
       }
       if (buffer[index].mix.isSnare) {
-        rect(screenWidth - 105 - i * 5, 40, 3, 10);
+        rect(screenWidth - 105 - i * 3, 40, 2, 10);
       }
       if (buffer[index].mix.isHat) {
-        rect(screenWidth - 105 - i * 5, 55, 3, 10);
+        rect(screenWidth - 105 - i * 3, 55, 2, 10);
       }
     }
   }

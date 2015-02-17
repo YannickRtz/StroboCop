@@ -16,6 +16,9 @@ public void setupServer() {
   beatFreqMix.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqLeft.detectMode(BeatDetect.FREQ_ENERGY);
   beatFreqRight.detectMode(BeatDetect.FREQ_ENERGY);
+  
+  beatFreq = new BeatDetect(1024, 44100);
+  beatFreq.setSensitivity(100);
 
   faderComposition = new Composition(new FadeOnSilenceEffect(Color.BLACK));
 
@@ -38,6 +41,7 @@ public void drawServer() {
   beatFreqMix.detect(audioIn.mix);
   beatFreqLeft.detect(audioIn.left);
   beatFreqRight.detect(audioIn.right);
+  beatFreq.detect(audioIn.mix);
   analyser.analyse();
 
   writeMessageAll(Color.BLACK);
@@ -98,7 +102,7 @@ public void drawServer() {
     text("stereonessKick: " + analyser.stereonessKick, 300, 65);
     text("stereonessSnare: " + analyser.stereonessSnare, 300, 80);
 
-    analyser.drawCache();
+    analyser.drawBuffer();
     if (!SMALL_MODE) {
       image(logo, screenWidth / 2 - logo.width / 2, 200);
     }

@@ -21,6 +21,7 @@ BeatDetect beatSoundRight;
 BeatDetect beatFreqMix;
 BeatDetect beatFreqLeft;
 BeatDetect beatFreqRight;
+BeatDetect beatFreq; // Used for "advanced" analysis code
 Analyser analyser;
 int screenHeight;
 int screenWidth;
