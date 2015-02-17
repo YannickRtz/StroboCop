@@ -101,7 +101,7 @@ void draw() {
   if (frameCount == 1) {
     //NOTE(yannick): This is supposed to work better when done in draw()
     // instead of setup()
-    //TODO: Check if this is true for us.
+    //TODO: Check if this is true for us
     frame.setLocation(0,0);
   }
 
