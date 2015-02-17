@@ -1,4 +1,4 @@
-// Client Code
+/* Client Code */
 
 public void setupClient() {
   client = new Client(this, SERVER_IP, 5204);
