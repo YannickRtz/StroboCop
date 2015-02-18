@@ -6,7 +6,7 @@ public class Analyser {
    * buffer in the long run.
    */
   
-  private int BUFFER_SIZE = FRAMERATE * 6;
+  private int BUFFER_SIZE = FRAMERATE * 5;
   private int CACHE_SIZE = FRAMERATE * 10;
   private int FREQ_BAND_COUNT = 27; // Number of frequency bands beatdetect is looking at
   private MainBufferObject[] buffer = new MainBufferObject[BUFFER_SIZE];
@@ -29,8 +29,8 @@ public class Analyser {
   private int HIT_THRESHOLD = 8;
   private int MIN_EXPECTED_TEMPO = 55;
   private int MAX_EXPECTED_TEMPO = 240;
-  private float LOUDNESS_THRESHOLD = 0.018; // If loudness is below this, it's considered silence
-  private int MAX_TEMPO_AGE = 40;
+  private float LOUDNESS_THRESHOLD = 0.015; // If loudness is below this, it's considered silence
+  private int MAX_TEMPO_AGE = 45;
   private int COOLDOWN_FRAMES = 5;
   
   // Event types enumeration
@@ -78,7 +78,7 @@ public class Analyser {
   // BeatDetect.detect() has to be executed before this.
   public void analyse() {
     fillBuffer();
-    fillCache();
+    // fillCache();
     
     onsetCooldown--;
     kickCooldown--;
@@ -274,12 +274,15 @@ public class Analyser {
       
       float tmpGuessedTempo = FRAMERATE * 60 / beatDistanceInFrames;
       
-      if (detectedRegularity >= 3 &&
+      if (detectedRegularity >= (float)BUFFER_SIZE / 50 &&
           tmpGuessedTempo <= MAX_EXPECTED_TEMPO &&
           tmpGuessedTempo >= MIN_EXPECTED_TEMPO) {
         if (tmpGuessedTempo < 80) {
           guessedTempo = tmpGuessedTempo * 2;
           guessedTempoInFrames = beatDistanceInFrames / 2;
+        } else if (tmpGuessedTempo > 200) {
+          guessedTempo = tmpGuessedTempo / 2;
+          guessedTempoInFrames = beatDistanceInFrames * 2;
         } else {
           guessedTempo = tmpGuessedTempo;
           guessedTempoInFrames = beatDistanceInFrames;

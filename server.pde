@@ -47,10 +47,7 @@ public void drawServer() {
   writeMessageAll(Color.BLACK);
 
   // Pick a new, random composition on pause.
-  if (analyser.secondsSincePause > 100) {
-    analyser.secondsSincePause = 0;
-  }
-  if (analyser.secondsSincePause == 0) {
+  if (analyser.secondsSincePause % 100 < 0.5) {
     compositionIndex = randomInt(compositions.size());
     currentComposition = compositions.get(compositionIndex);
   }
@@ -109,8 +106,13 @@ public void drawServer() {
     text("loudness: " + analyser.loudness, 20, 45);
     text("guessedTempo: " + analyser.guessedTempo, 20, 60);
     text("detectedRegularity: " + analyser.detectedRegularity, 20, 75);
+    fill(100);
+    if (analyser.tempoGuessAge < analyser.secondsSincePause && analyser.tempoGuessAge < 45) {
+      fill(255);
+    }
     text("tempoGuessAge: " + analyser.tempoGuessAge, 20, 90);
-
+    fill(255);
+    
     fill(100);
     if (analyser.getBeat()) { fill(255); }
     text("analyser.getBeat()", 300, 20);

@@ -27,5 +27,9 @@ public class ColorPalette {
   public ColorPalette getRandom() {
     return new ColorPalette(colors.get(randomInt(colors.size())));
   }
+  
+  public ColorPalette get(int index) {
+    return new ColorPalette(colors.get(index % colors.size()));
+  }
 
 }

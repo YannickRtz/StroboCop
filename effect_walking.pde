@@ -19,7 +19,7 @@ public class WalkingEffect extends Effect {
     colors = palette.toArray();
     this.eventType = eventType;
     this.randomMode = randomMode;
-    walkerPosition += offset;
+    walkerPosition += (offset % NUMBER_OF_SCREENS);
   }
 
   public WalkingEffect(int eventType,

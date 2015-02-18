@@ -9,7 +9,7 @@ public class BreathingEffect extends Effect {
   private float durationInFrames = 0;
 
   public BreathingEffect(int screenNumber, int duration, int offset, ColorPalette palette) {
-    this.screenNumber = screenNumber;
+    this.screenNumber = (screenNumber % NUMBER_OF_SCREENS);
     colors = palette.toArray();
     this.duration = duration;
     durationInFrames = duration / (1000 / FRAMERATE);
