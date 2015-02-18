@@ -54,3 +54,9 @@ ColorPalette circus = new ColorPalette("#5500FF",
                                        "#FA0068",
                                        "#FFD30F",
                                        "#9E009B");
+ColorPalette hardMode = new ColorPalette("#FA0000",
+                                         "#34FF14",
+                                         "#2929FF",
+                                         "#D724FF",
+                                         "#F5F500",
+                                         "#0AFBFF");
