@@ -21,6 +21,8 @@ public void setupServer() {
   
   beatFreq = new BeatDetect(1024, 44100);
   beatFreq.setSensitivity(100);
+  
+  delayCompensation = 0;
 
   faderComposition = new Composition(new FadeOnSilenceEffect(Color.BLACK));
 
@@ -56,28 +58,6 @@ public void drawServer() {
 
   currentComposition.run();
   faderComposition.run();
-
-  // Check for the interesting character (we don't want it in there)
-  for (int i = message.length - 1; i >= 0; i--) {
-    message[i] = message[i] == 1 ? 0 : message[i];
-  }
-  message[NUMBER_OF_SCREENS * 3] = (byte)1;
-  
-  boolean somethingChanged = false;
-  if (oldMessage != null) {
-    for (int i = message.length - 1; i >= 0; i--) {
-      if (message[i] != oldMessage[i]) {
-        somethingChanged = true;
-      }
-    }
-  } else {
-    somethingChanged = true;
-  }
-  if (somethingChanged) {
-    server.write(message);
-    oldMessage = message.clone();
-    colorScreens();
-  }
   
   if (keyPressed) {
     if (key == CODED) {
@@ -95,7 +75,59 @@ public void drawServer() {
       if (keyCode == RIGHT) {
         DEBUG_MODE = false;
       }
+    } else {
+      Boolean newBuffer = false;
+      if (key == 'k' || key == 'K') {
+        delayCompensation++;
+        newBuffer = true;
+      }
+      if ((key == 'j' || key == 'J') && delayCompensation > 0) {
+        delayCompensation--;
+        newBuffer = true;
+      }
+      if (newBuffer && delayCompensation > 0) {
+        serverMessageBuffer = new byte[delayCompensation][message.length];
+        for (int i = 0; i < delayCompensation; i++) {
+          for (int j = 0; j < message.length; j++) {
+            serverMessageBuffer[i][j] = 40;
+          }
+        }
+        for (int i = 0; i < message.length; i++) {
+          if (i != message.length - 1) {
+            message[i] = 40;
+          } else {
+            message[i] = 1;
+          }
+        }
+      }
     }
+  }
+
+  // Check for the interesting character (we don't want it in there)
+  for (int i = message.length - 1; i >= 0; i--) {
+    message[i] = message[i] == 1 ? 0 : message[i];
+  }
+  message[NUMBER_OF_SCREENS * 3] = (byte)1;
+  
+  if (delayCompensation > 0) {
+    serverMessageBuffer[frameCount % delayCompensation] = message;
+    message = serverMessageBuffer[(frameCount+1) % delayCompensation];
+  }
+  
+  boolean somethingChanged = false;
+  if (oldMessage != null) {
+    for (int i = message.length - 1; i >= 0; i--) {
+      if (message[i] != oldMessage[i]) {
+        somethingChanged = true;
+      }
+    }
+  } else {
+    somethingChanged = true;
+  }
+  if (somethingChanged) {
+    server.write(message);
+    oldMessage = message.clone();
+    colorScreens();
   }
   
   if (DEBUG_MODE) {
@@ -123,7 +155,8 @@ public void drawServer() {
     text("stereonessOnset: " + analyser.stereonessOnset, 300, 50);
     text("stereonessKick: " + analyser.stereonessKick, 300, 65);
     text("stereonessSnare: " + analyser.stereonessSnare, 300, 80);
-
+    text("delayCompensation: " + delayCompensation, 300, 95);
+    
     analyser.drawBuffer();
     if (!SMALL_MODE) {
       image(logo, screenWidth / 2 - logo.width / 2, 200);

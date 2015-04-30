@@ -35,6 +35,8 @@ Composition faderComposition;
 boolean oldDebugMode;
 PImage logo;
 int lastSuccess;
+int delayCompensation;
+byte[][] serverMessageBuffer;
 
 // Configuration constants:
 int FRAMERATE = 30;  //NOTE(yannick): All effects should be framerate independent
