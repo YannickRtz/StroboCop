@@ -70,7 +70,12 @@ void setup() {
       MY_SCREENS[i] = Integer.parseInt(strArray[i]);
     }
     if (!SERVER_MODE) {
-      SERVER_IP = JOptionPane.showInputDialog("What is the server IP?");
+      Server testServer = new Server(this, 5205);
+      String myIP = testServer.ip();
+      String[] myIPArray = myIP.split("\\.");
+      testServer.stop();
+      String lastNumber = JOptionPane.showInputDialog("What is the last number of the server IP?");
+      SERVER_IP = myIPArray[0] + "." + myIPArray[1] + "." + myIPArray[2] + "." + lastNumber;
     }
   }
   logo = loadImage("logo.png");
