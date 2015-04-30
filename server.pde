@@ -1,6 +1,8 @@
 // Server Code
 
 public void setupServer() {
+  message = new byte[NUMBER_OF_SCREENS * 3 + 1];
+  
   oldDebugMode = DEBUG_MODE;
   server = new Server(this, 5204);
   minim = new Minim(this);

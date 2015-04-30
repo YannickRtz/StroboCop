@@ -34,6 +34,7 @@ Composition currentComposition;
 Composition faderComposition;
 boolean oldDebugMode;
 PImage logo;
+int lastSuccess;
 
 // Configuration constants:
 int FRAMERATE = 30;  //NOTE(yannick): All effects should be framerate independent
@@ -59,9 +60,11 @@ void setup() {
                                                     "Check",
                                                     JOptionPane.YES_NO_OPTION);
     SERVER_MODE = (serverValue == JOptionPane.YES_OPTION);
-    String inputValue = JOptionPane.showInputDialog("How many screens are involved?");
-    NUMBER_OF_SCREENS = Integer.parseInt(inputValue);
-    inputValue = JOptionPane.showInputDialog("Which screens are connected to this computer?\n" +
+    if (SERVER_MODE) {
+      String inputValue = JOptionPane.showInputDialog("How many screens are involved?");
+      NUMBER_OF_SCREENS = Integer.parseInt(inputValue);
+    }
+    String inputValue = JOptionPane.showInputDialog("Which screens are connected to this computer?\n" +
                                                     "Comma separated list of numbers e.g. for the first two screens:\n" +
                                                     "\"1,2\"");
     String[] strArray = inputValue.split(",");
@@ -93,9 +96,6 @@ void setup() {
   }
 
   frameRate(FRAMERATE);
-
-  //message = new byte[NUMBER_OF_SCREENS * 3 + 1];
-  message = new byte[512];
 
   if (SERVER_MODE) {
     setupServer();
