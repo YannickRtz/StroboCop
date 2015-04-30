@@ -105,7 +105,7 @@ void setup() {
 }
 
 void draw() {
-  if (frameCount == 1) {
+  if (frameCount < FRAMERATE) {
     //NOTE(yannick): This is supposed to work better when done in draw()
     // instead of setup()
     //TODO: Check if this is true for us
