@@ -2,6 +2,7 @@
 
 public void setupServer() {
   message = new byte[NUMBER_OF_SCREENS * 3 + 1];
+  delayedMessage = new byte[NUMBER_OF_SCREENS * 3 + 1];
   
   oldDebugMode = DEBUG_MODE;
   server = new Server(this, 5204);
@@ -89,7 +90,11 @@ public void drawServer() {
         serverMessageBuffer = new byte[delayCompensation][message.length];
         for (int i = 0; i < delayCompensation; i++) {
           for (int j = 0; j < message.length; j++) {
-            serverMessageBuffer[i][j] = 40;
+            if (j != message.length - 1) {
+              serverMessageBuffer[i][j] = 40;
+            } else {
+              serverMessageBuffer[i][j] = 1;
+            }
           }
         }
         for (int i = 0; i < message.length; i++) {
@@ -110,9 +115,10 @@ public void drawServer() {
   message[NUMBER_OF_SCREENS * 3] = (byte)1;
   
   if (delayCompensation > 0) {
-    serverMessageBuffer[frameCount % delayCompensation] = message;
-    message = serverMessageBuffer[(frameCount+1) % delayCompensation];
+    serverMessageBuffer[frameCount % delayCompensation] = message.clone();
+    delayedMessage = serverMessageBuffer[(frameCount+1) % delayCompensation].clone();
   }
+  colorScreens();
   
   boolean somethingChanged = false;
   if (oldMessage != null) {
@@ -127,7 +133,6 @@ public void drawServer() {
   if (somethingChanged) {
     server.write(message);
     oldMessage = message.clone();
-    colorScreens();
   }
   
   if (DEBUG_MODE) {

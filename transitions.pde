@@ -12,11 +12,20 @@ public void colorScreens() {
     return;
   }
   noStroke();
-  for (int i = 0; i < MY_SCREENS.length; i++) {
-    colorScreen(byteToInt(message[(MY_SCREENS[i] - 1) * 3]),
+  if (delayCompensation > 0) {
+    for (int i = 0; i < MY_SCREENS.length; i++) {
+      colorScreen(byteToInt(delayedMessage[(MY_SCREENS[i] - 1) * 3]),
+                byteToInt(delayedMessage[(MY_SCREENS[i] - 1) * 3 + 1]),
+                byteToInt(delayedMessage[(MY_SCREENS[i] - 1) * 3 + 2]),
+                i + 1);
+    }
+  } else {
+    for (int i = 0; i < MY_SCREENS.length; i++) {
+      colorScreen(byteToInt(message[(MY_SCREENS[i] - 1) * 3]),
                 byteToInt(message[(MY_SCREENS[i] - 1) * 3 + 1]),
                 byteToInt(message[(MY_SCREENS[i] - 1) * 3 + 2]),
                 i + 1);
+    }
   }
 }
 

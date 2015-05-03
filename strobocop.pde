@@ -28,6 +28,7 @@ int screenWidth;
 int errorCounter;
 int compositionIndex;
 byte[] message;
+byte[] delayedMessage;
 byte[] oldMessage;
 ArrayList<Composition> compositions;
 Composition currentComposition;

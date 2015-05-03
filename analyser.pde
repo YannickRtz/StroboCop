@@ -303,7 +303,7 @@ public class Analyser {
       detectedRegularity = 0;
     }
     
-    float tempoOffset = (frameCount - guessedBeatIndex) % guessedTempoInFrames;
+    float tempoOffset = ((frameCount + delayCompensation) - guessedBeatIndex) % guessedTempoInFrames;
     if (tempoOffset < 0.5 || tempoOffset > guessedTempoInFrames + 0.5) {
       isGuessedBeat = true;
     } else {
